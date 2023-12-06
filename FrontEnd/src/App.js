@@ -27,16 +27,16 @@ import AdminPageChairs from './Admin/AdminPageChairs';
 import AdminPageWardrobes from './Admin/AdminPageWardrobes';
 import AdminPageTables from './Admin/AdminPageTables';
 import AdminUserList from './Admin/AdminUserList';
-// import axios from 'axios'
+import axios from 'axios'
 
 
-// export const Axios= axios.create({
-//   baseURL: process.env.REACT_BASE_URL,
-//   headers: {
-//     "Content-Type":"application/json",
-//     Authorization:localStorage.getItem('jwt')
-//   }
-// })
+export const Axios= axios.create({
+  baseURL: process.env.REACT_BASE_URL,
+  headers: {
+    "Content-Type":"application/json",
+    Authorization:localStorage.getItem('jwt')
+  }
+})
 
 
 
