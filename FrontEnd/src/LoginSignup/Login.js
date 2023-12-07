@@ -11,6 +11,8 @@ import {
 } from "mdb-react-ui-kit";
 import { Link, useNavigate } from "react-router-dom";
 import { Mycontext } from "../context/Context";
+import toast from "react-hot-toast";
+import { Axios } from "../App";
 
 
 
@@ -25,6 +27,30 @@ function Login() {
     const password = e.target.pwd.value;
     const Adminemail=process.env.ADMIN_EMAIL
 
+    if(eml === "" || password === ""){
+      toast.error("Inuput Field is Empty")
+      return;
+    }
+    let url="http://localhost:3003/api/users/login"
+
+    if(eml === Adminemail ){
+        url="http://localhost:3003/api/admin/login";
+    }
+    try {  
+      const payload= {email:eml,password};
+      const response=await Axios.post(url,payload)
+
+      if(response.status === 200){
+        eml !== Adminemail && localStorage.setItem("UserEmail",response.data.id)
+        
+      }
+
+
+    }catch{
+      
+    }
+  }
+  
 
     // console.log(eml);
     // console.log(password);
@@ -177,5 +203,6 @@ function Login() {
     </div>
   );
 }
+
 
 export default Login;
