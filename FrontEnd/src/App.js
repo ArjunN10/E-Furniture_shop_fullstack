@@ -31,7 +31,7 @@ import axios from 'axios'
 
 
 export const Axios= axios.create({
-  baseURL: process.env.REACT_BASE_URL,
+  baseURL: process.env.REACT_BASE_URL || "http://localhost:3003/",
   headers: {
     "Content-Type":"application/json",
     Authorization:localStorage.getItem('jwt')

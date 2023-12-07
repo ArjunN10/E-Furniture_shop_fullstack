@@ -10,37 +10,73 @@ import {
   MDBInput,
   MDBIcon,
 } from "mdb-react-ui-kit";
-import { Mycontext } from "../context/Context";
+// import { Mycontext } from "../context/Context";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
+// import axios from "axios";
+import toast from "react-hot-toast"
+import { Axios } from "../App";
+import axios from "axios";
+
 
 function Signup() {
-  const { user, setuser } = useContext(Mycontext);
+  // const { user, setuser } = useContext(Mycontext);
   const navigate = useNavigate();
 
-  const register = (event) => {
+  const register = async(event) => {
     event.preventDefault();
-    const name = event.target.name.value;
-    const email = event.target.email.value;
-    const password = event.target.pwd.value;
-    const repassword = event.target.repwd.value;
-    const emailvalid = user.filter((item) => item.email === email);
-    if (emailvalid.length !== 0) {
-      alert("Email already exists");
-    } else {
-      setuser([
-        ...user,
-        {
-          name: name,
-          email: email,
-          password: password,
-          re_password: repassword,
-        },
-      ]);
+    const name = event.target.name.value.trim();
+    const email = event.target.email.value.trim();
+    const username = event.target.username.value.trim();
+    const password = event.target.pwd.value.trim();
+
+// console.log("name :",name);
+// console.log("email :",email);
+// console.log("username :",username);
+// console.log("password :",password);
+
+    if(name === "" || email === "" || username === "" || password === ""){
+      toast("Please Fill All Input Fields")
     }
-    event.target.reset();
+    try{
+      const payload={name,email,username,password}
+      // console.log(payload);
+   
+      const response = await Axios.post("api/users/register", payload);
+
+      // console.log(response);
+      if(response.status === 201){
+        toast.success("Registration Successfull")
+        navigate("/login")
+      }
+    }
+    catch(error){
+      console.log("Register Failed:",error);
+    }
   };
+
+  //   const emailvalid = user.filter((item) => item.email === email);
+  //   if (emailvalid.length !== 0) {
+  //     alert("Email already exists");
+  //   } else {
+  //     setuser([
+  //       ...user,
+  //       {
+  //         name: name,
+  //         email: email,
+  //         password: password,
+  //         re_password: repassword,
+  //       },
+  //     ]);
+  //   }
+  //   event.target.reset();
+  // };
+
+
+
+
+
 
   return (
     <MDBContainer fluid>
@@ -85,6 +121,16 @@ function Signup() {
                     />
                   </div>
 
+                  <div className="d-flex flex-row align-items-center mb-4">
+                    <MDBIcon fas icon="key me-3" size="lg" />
+                    <MDBInput
+                      label="username"
+                      id="username"
+                      type="text"
+                      required
+                    />
+                  </div>
+
                   <div className="d-flex flex-row align-items-center mb-3">
                     <MDBIcon fas icon="lock me-3" size="lg" />
                     <MDBInput
@@ -95,15 +141,6 @@ function Signup() {
                     />
                   </div>
 
-                  <div className="d-flex flex-row align-items-center mb-4">
-                    <MDBIcon fas icon="key me-3" size="lg" />
-                    <MDBInput
-                      label="Repeat your password"
-                      id="repwd"
-                      type="password"
-                      required
-                    />
-                  </div>
                 </div>
 
                 <MDBBtn

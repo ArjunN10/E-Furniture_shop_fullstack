@@ -12,31 +12,47 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { Mycontext } from "../context/Context";
 
+
+
+
 function Login() {
   const navigate = useNavigate();
   const { user, setusername, setLoggedIn } = useContext(Mycontext);
-  const login = (e) => {
+
+  const login = async(e) => {
     e.preventDefault();
-    const eml = e.target.email.value;
+    const eml = e.target.email.value.trim();
     const password = e.target.pwd.value;
+    const Adminemail=process.env.ADMIN_EMAIL
+
+
     // console.log(eml);
     // console.log(password);
-    const filteruser = user.filter((item) => item.email === eml);
-    // console.log(username);
-    if (filteruser.length !== 0) {
-      if (filteruser[0].password === password) {
-        setLoggedIn((prevvalue) => (prevvalue = !prevvalue));
-        navigate("/");
-        setusername(filteruser[0].name);
-      } else {
-        alert("Invalid Details");
-      }
-    } else if (eml == "admin@gmail.com" && password == "admin") {
-      navigate("/adminhome");
-    } else {
-      alert("user not avilable");
-    }
-  };
+  //   const filteruser = user.filter((item) => item.email === eml);
+  //   // console.log(username);
+  //   if (filteruser.length !== 0) {
+  //     if (filteruser[0].password === password) {
+  //       setLoggedIn((prevvalue) => (prevvalue = !prevvalue));
+  //       navigate("/");
+  //       setusername(filteruser[0].name);
+  //     } else {
+  //       alert("Invalid Details");
+  //     }
+  //   } else if (eml == "admin@gmail.com" && password == "admin") {
+  //     navigate("/adminhome");
+  //   } else {
+  //     alert("user not avilable");
+  //   }
+  // };
+
+
+
+
+
+
+
+
+
 
   return (
     <div>
