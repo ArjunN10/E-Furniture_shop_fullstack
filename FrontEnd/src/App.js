@@ -38,11 +38,6 @@ export const Axios= axios.create({
 })
 
 
-
-
-
-
-
 function App() {
 const [products,setproducts]=useState(productsList)
 const [user,setuser]=useState([])

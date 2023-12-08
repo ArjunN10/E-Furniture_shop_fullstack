@@ -55,27 +55,24 @@ UserRegister: async (req, res) => {
 
 userlogin:async(req,res)=>{
 const {value,error}=joiUserSchema.validate(req.body)
+// console.log(req.body)
 if(error){
     return res.json(error.message)
 }
 const {email,password}=value
 const user =await userdatabase.findOne({
-    email:email
+    email:email,
 })
-
-
-
 // console.log(user)
-
 const id=user.id
-
+const Username=user.username
+// console.log(Username)
 if(!user){
 return res.status(404).json({
     status:"errror",
     message:"User not found"
 })
 }
-
 if(!password || !user.password){
     return res.status(400).json({
         status:"error",
@@ -96,7 +93,7 @@ const Token=jwt.sign({email:user.email},process.env.USER_ACCES_TOKEN_SECRET,{
 res.status(200).json({
     status:"success",
     message:"Login Successfull",
-    data:{id,email,Token}
+    data:{id,email,Token,Username }
 })
 },
 
