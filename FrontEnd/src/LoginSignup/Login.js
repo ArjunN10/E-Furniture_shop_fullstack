@@ -1,4 +1,3 @@
-import React, { useContext } from "react";
 import {
   MDBBtn,
   MDBContainer,
@@ -10,7 +9,6 @@ import {
   MDBIcon,
 } from "mdb-react-ui-kit";
 import { Link, useNavigate } from "react-router-dom";
-import { Mycontext } from "../context/Context";
 import toast from "react-hot-toast";
 import { Axios } from "../App";
 
@@ -19,13 +17,13 @@ import { Axios } from "../App";
 
 function Login() {
   const navigate = useNavigate();
-  const { user, setusername, setLoggedIn } = useContext(Mycontext);
 
   const login = async(e) => {
     e.preventDefault();
     const eml = e.target.email.value.trim();
     const password = e.target.pwd.value;
-    const Adminemail=process.env.ADMIN_EMAIL
+    const Adminemail=process.env.REACT_APP_ADMIN_EMAIL
+    console.log(Adminemail)
 
     if(eml === "" || password === ""){
       toast.error("Inuput Field is Empty")
@@ -39,46 +37,41 @@ function Login() {
     try {  
       const payload= {email:eml,password};
       const response=await Axios.post(url,payload)
+      console.log(response)
 
       if(response.status === 200){
-        eml !== Adminemail && localStorage.setItem("UserEmail",response.data.id)
+        eml !== Adminemail && localStorage.setItem("UserId",response.data.data.id)
+        eml === Adminemail && localStorage.setItem("role","admin")
+        localStorage.setItem("jwt",response.data.data.Token)
+        localStorage.setItem("UserEmail",response.data.data.email)
+        console.log(response.data.data.Token)
+        console.log(response.data.data.email)
+        // console.log(eml)
+        // console.log(Adminemail)
+        // console.log(response.data.data.id)
         
+
+        if(eml === Adminemail){
+          navigate("/adminhome/")
+          toast.success("Admin Login Successfull")
+        }else{
+          setTimeout(()=>{
+            localStorage.removeItem("jwt")
+            localStorage.removeItem("UserId")
+            localStorage.removeItem("UserEmail")
+
+          },3600000)
+          navigate("/")
+          toast.success("Login Successfull")
+        }  
+      }else{
+        toast.error("Login Failed:",response.error)
       }
-
-
-    }catch{
-      
+    }catch(error){
+      console.log("err:",error)
+      toast.error("Invalid EMAIL or PASSWORD")
     }
-  }
-  
-
-    // console.log(eml);
-    // console.log(password);
-  //   const filteruser = user.filter((item) => item.email === eml);
-  //   // console.log(username);
-  //   if (filteruser.length !== 0) {
-  //     if (filteruser[0].password === password) {
-  //       setLoggedIn((prevvalue) => (prevvalue = !prevvalue));
-  //       navigate("/");
-  //       setusername(filteruser[0].name);
-  //     } else {
-  //       alert("Invalid Details");
-  //     }
-  //   } else if (eml == "admin@gmail.com" && password == "admin") {
-  //     navigate("/adminhome");
-  //   } else {
-  //     alert("user not avilable");
-  //   }
-  // };
-
-
-
-
-
-
-
-
-
+  };
 
   return (
     <div>
