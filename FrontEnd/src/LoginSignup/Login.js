@@ -46,12 +46,10 @@ function Login() {
         localStorage.setItem("UserEmail",response.data.data.email)
         localStorage.setItem("UserName",response.data.data.Username)
         // console.log(response.data.data.Token)
-        // console.log(response.data.data.email)
+        console.log(response.data.data.email)
         // console.log(eml)
         // console.log(Adminemail)
         // console.log(response.data.data.id)
-        
-
         if(eml === Adminemail){
           navigate("/adminhome/")
           toast.success("Admin Login Successfull")
