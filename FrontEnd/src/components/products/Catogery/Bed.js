@@ -34,8 +34,11 @@ const productBycategory=async()=>{
       setproducts(response.data.data)
     }
   } catch (error) {
-    console.log("error :",error)
-    toast.error(error.message)
+    console.log("error:", error);
+
+    // Ensure error.message is a string before passing it to toast.error
+    const errorMessage = error.message || "Failed to fetch products";
+    toast.error(errorMessage);
     
   }
 }

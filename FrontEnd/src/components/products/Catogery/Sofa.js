@@ -35,7 +35,7 @@ const productBycategory=async()=>{
     }
   } catch (error) {
     console.log("error :",error)
-    toast.error(error.message)
+    toast.error(error)
   }
 }
 productBycategory()

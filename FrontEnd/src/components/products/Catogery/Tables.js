@@ -30,13 +30,13 @@ const categoryname="table"
     const productBycategory=async()=>{
       try {
         const response= await Axios.get(`/api/users/products/category/${categoryname}`)
-        console.log(response)
+        // console.log(response)
         if(response.status === 200){
           setproducts(response.data.data)
         }
       } catch (error) {
         console.log("errpr :",error)
-        toast.error(error.message)
+        toast.error(error)
       }
     }
     productBycategory()
