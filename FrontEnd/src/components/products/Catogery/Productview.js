@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   MDBContainer,
   MDBRow,
@@ -12,44 +12,84 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Mycontext } from "../../../context/Context";
 import Nav from "../../Nav";
 import Footer from "../../Footer";
+import { Axios } from "../../../App";
+import toast from "react-hot-toast";
 
 function Productview() {
   const navigate = useNavigate();
-  const { products, addcart, setaddcart, loggedIn } = useContext(Mycontext);
+  const {  addcart, setaddcart, loggedIn } = useContext(Mycontext);
   const { id } = useParams();
+  console.log(id)
+  // const productfilter = products.filter((p) => p.id === parseInt(id));
 
-  const productfilter = products.filter((p) => p.id === parseInt(id));
+const userid=localStorage.getItem("UserId")
+const isuser=localStorage.getItem("UserName")
+const [products,setproducts]=useState([])
+console.log(products.title)
 
-  const idproduct = () => {
-    if (loggedIn === false) {
-      if (addcart.includes(productfilter[0])) {
-        alert("Your product is already in your cart");
-        navigate("/");
-      } else {
-        setaddcart([...addcart, ...productfilter]);
-        navigate("/addcart");
+  // const idproduct = () => {
+  //   if (loggedIn === false) {
+  //     if (addcart.includes(productfilter[0])) {
+  //       alert("Your product is already in your cart");
+  //       navigate("/");
+  //     } else {
+  //       setaddcart([...addcart, ...productfilter]);
+  //       navigate("/addcart");
+  //     }
+  //   } else {
+  //     alert("You must log in");
+  //     navigate("/");
+  //   }
+  // };
+
+  useEffect(() => {
+    const FetchById=async()=>{
+      try {
+        const response=await Axios.get(`/api/users/products/${id}`)
+        console.log(response)
+        if(response.status === 200){
+          setproducts(response.data.data || [])
+        }
+      } catch (error) {
+        console.log("Error fetching product details")
+        toast.error(error.message)
       }
-    } else {
-      alert("You must log in");
-      navigate("/");
+    }
+    FetchById()
+
+    window.scrollTo(0, 0);
+  }, []);
+
+
+  const handleAddToCart = async () => {
+    try {
+      const response = await Axios.post( `/api/users/${userid}/cart`,{producId: id })
+      console.log(response);
+      if (response.status === 200){
+        await Axios.get(`/api/users/${userid}/cart`)
+        toast.success("Product added to the cart!")
+      }
+      
+    } catch (error) {
+      console.error('Error adding product to the cart:', error);
+      toast.error(error.response.data.message)
     }
   };
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+
 
   return (
     <>
       <div className="sticky-top">
         <Nav />
       </div>
-      {productfilter.map((Pro) => (
-        <div key={Pro.id}>
+      {/* { */}
+      
+        <div key={products._id}>
           <main className="mt-5 pt-4">
             <MDBContainer className="mt-5">
               <MDBRow>
-                <MDBCol md="6" mb="4">
+                <MDBCol md="6" mb="4"> 
                   <MDBCard
                     style={{
                       boxShadow:
@@ -57,7 +97,7 @@ function Productview() {
                     }}
                   >
                     <img
-                      src={Pro.src}
+                      src={products.image}
                       className="img-fluid hover-shadow card-img-top"
                       alt="Product"
                     />
@@ -75,16 +115,16 @@ function Productview() {
                     <div className="p-4">
                       <p className="lead">
                         <span className="me-1">
-                          <h1>{Pro.name}</h1>
+                          <h1>{products.title}</h1>
                           <h5>
-                            Price :<del>${Pro.price2}</del>
+                            Price :<del>${products.price2}</del>
                           </h5>
                         </span>
                         <h3>
                           <span className="blockquote-footer">
                             Offer Price :{" "}
                           </span>
-                          {Pro.price}
+                          {products.price}
                         </h3>
                       </p>
 
@@ -92,7 +132,7 @@ function Productview() {
                         <p style={{ fontSize: "20px" }}>Description</p>
                       </strong>
 
-                      <p>{Pro.Discription}</p>
+                      <p>{products.description}</p> 
 
                       <form className="justify-content-left d-flex p-2">
                         <div className="form-outline me-1" style={{ width: "100px" }}>
@@ -101,8 +141,8 @@ function Productview() {
                         <MDBBtn
                           color="primary"
                           className="ms-1"
-                          id={Pro.id}
-                          onClick={() => idproduct()}
+                          id={products.id}
+                          onClick={() => handleAddToCart()}
                         >
                           Add to cart <i className="fas fa-shopping-cart ms-1"></i>
                         </MDBBtn>
@@ -111,8 +151,8 @@ function Productview() {
                         <MDBBtn
                           color="outline-primary"
                           size="lg"
-                          id={Pro.id}
-                          onClick={() => idproduct()}
+                          id={products.id}
+                          onClick={() => handleAddToCart() }
                         >
                           BUY NOW
                         </MDBBtn>
@@ -227,7 +267,10 @@ function Productview() {
             </MDBContainer>
           </main>
         </div>
-      ))}
+      {/* // ))
+      ) : (
+        <p>No product details available</p>
+      )} */}
       <div className='mt-3'>
         <Footer />
       </div>

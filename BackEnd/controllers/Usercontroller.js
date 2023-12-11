@@ -136,6 +136,7 @@ productById:async(req,res)=>{
 
 },
 
+
 // view product Category
 
 productBycategory:async(req,res)=>{
@@ -143,11 +144,11 @@ const productCategory=req.params.categoryname
 try {
        // Use a case-insensitive regular expression for the category search
        const products = await Products.find({
-        category: { $regex: new RegExp(productCategory, 'i') },
+        category: { $regex: new RegExp(productCategory, 'i') },   
       });
   
       if (!products.length) {
-        return res.status(404).json({
+        return res.status(404).json({   
           status: 'error',
           message: 'No products found in the specified category',
         });
@@ -183,7 +184,7 @@ try {
 
 },
 
-
+  
 // Add to Cart
 
     addToCart:async (req, res) => {

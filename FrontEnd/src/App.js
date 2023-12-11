@@ -27,6 +27,7 @@ import AdminPageWardrobes from './Admin/AdminPageWardrobes';
 import AdminPageTables from './Admin/AdminPageTables';
 import AdminUserList from './Admin/AdminUserList';
 import axios from 'axios'
+import { Toaster } from 'react-hot-toast';
 
 
 export const Axios= axios.create({
@@ -48,6 +49,8 @@ const [loggedIn, setLoggedIn] = useState(false);
   return (
     <>
     <Mycontext.Provider value={{products,setproducts,user,setuser,username,setusername,addcart,setaddcart,loggedIn, setLoggedIn}}>
+
+    <Toaster position="top-center" reverseOrder={false}/>
      <Routes>
       <Route path='/' element={<Home/>}/>
       <Route path='/login' element={<Login/>}/>
