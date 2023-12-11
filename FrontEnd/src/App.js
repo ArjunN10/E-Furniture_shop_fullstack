@@ -39,12 +39,12 @@ export const Axios= axios.create({
 
 
 function App() {
-const [products,setproducts]=useState(productsList)
+const [products,setproducts]=useState([])
 const [user,setuser]=useState([])
 const [username,setusername]=useState([])
 const [addcart,setaddcart]=useState([])
 // const [Payment,setpayment]=useState([])
-const [loggedIn, setLoggedIn] = useState(true);
+const [loggedIn, setLoggedIn] = useState(false);
   return (
     <>
     <Mycontext.Provider value={{products,setproducts,user,setuser,username,setusername,addcart,setaddcart,loggedIn, setLoggedIn}}>

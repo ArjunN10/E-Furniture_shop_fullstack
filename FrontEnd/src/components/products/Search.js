@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { Mycontext } from "../../context/Context";
 
 const Search = () => {
-  const { products,setproducts } = useContext(Mycontext);
+  const { products } = useContext(Mycontext);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
@@ -22,7 +22,7 @@ const Search = () => {
   };
 
   const filteredProducts = products.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    item.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -46,7 +46,7 @@ const Search = () => {
           {filteredProducts.map((item) => (
             <MDBDropdownItem
               key={item.id}
-              onClick={() => navigate(`/productview/${item.id}`)}
+              onClick={() => navigate(`/productview/${item._id}`)}
             >
               <img src={item.src} className="w-25" alt={item.name} />{" "}
               {item.name}
