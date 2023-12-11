@@ -18,23 +18,46 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Mycontext } from "../context/Context";
 import Search from "./products/Search";
+import { useEffect } from "react";
 
 function Nav() {
   const { username, setusername,loggedIn, setLoggedIn } = useContext(Mycontext);
+  // console.log(loggedIn)
   const [showBasic, setShowBasic] = useState(false);
   const navigate = useNavigate();
-  
+
+
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('UserName');
+    // console.log(storedUsername)
+    if (storedUsername) {
+      // If UserName is found in local storage, set loggedIn to true
+      setLoggedIn(true);
+      setusername(storedUsername);
+    } else {
+      // If UserName is not found, set loggedIn to false
+      setLoggedIn(false);
+    }
+  }, [setLoggedIn, setusername]);
+
   const navcart = () => {
-    if (loggedIn===false) {
+    if (loggedIn) {
       navigate("/addcart");
     } else {
       alert("Login to your account");
     }
   };
+  
 
   const handleLogout = () => {
-    setusername(""); 
-    setLoggedIn(!loggedIn); 
+    // Clear the username from local storage on logout
+    localStorage.removeItem('UserName');
+    setusername('');
+    localStorage.removeItem("jwt")
+    localStorage.removeItem("UserId")
+    localStorage.removeItem("UserEmail")
+    setLoggedIn(!loggedIn);
   };
 
   return (
@@ -150,44 +173,44 @@ function Nav() {
         <div>
           <Search />
         </div>
-        {loggedIn!=true ?
-         (
+        {loggedIn == false ? (
           <div className="d-flex">
-          <MDBBtn
-            outline
-            rippleColor="secondary"
-            color="secondary"
-            onClick={handleLogout}
-            className="me-2"
-            type="button"
-          >
-            Logout
-          </MDBBtn>
-          
-           <MDBNavbarBrand className="me-2" href="#">
-           <MDBBtn className="btn btn-white" onClick={() => navcart()}>
-             <img
-               src="https://img.icons8.com/?size=2x&id=TdZUZUq3XNh6&format=gif"
-               alt="cart"
-               className="img-fluid"
-             />
-             <MDBNavbarLink>Cart</MDBNavbarLink>
-           </MDBBtn>
-         </MDBNavbarBrand>
-         </div>
-          )
-           : (
-          <MDBBtn
-            outline
-            rippleColor="success"
-            color="success"
-            onClick={() => navigate("/login")}
-            className="me-2"
-            type="button"
-          >
-            Login
-          </MDBBtn>
-          )}
+            <MDBBtn
+              outline
+              rippleColor="success"
+              color="success"
+              onClick={() => navigate("/login")}
+              className="me-2"
+              type="button"
+            >
+              Login
+            </MDBBtn>
+          </div>
+        ) : (
+          <div className="d-flex">
+            <MDBBtn
+              outline
+              rippleColor="secondary"
+              color="secondary"
+              onClick={handleLogout}
+              className="me-2"
+              type="button"
+            >
+              Logout
+            </MDBBtn>
+
+            <MDBNavbarBrand className="me-2" href="#">
+              <MDBBtn className="btn btn-white" onClick={() => navcart()}>
+                <img
+                  src="https://img.icons8.com/?size=2x&id=TdZUZUq3XNh6&format=gif"
+                  alt="cart"
+                  className="img-fluid"
+                />
+                <MDBNavbarLink>Cart</MDBNavbarLink>
+              </MDBBtn>
+            </MDBNavbarBrand>
+          </div>
+        )}
         <MDBBtn className="btn btn-white ">
           <img
             src="https://img.icons8.com/?size=2x&id=85750&format=png"
