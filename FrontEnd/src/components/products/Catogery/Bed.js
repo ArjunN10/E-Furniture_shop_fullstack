@@ -6,7 +6,7 @@ import {
   MDBCard,
   MDBCardImage,
   MDBCardBody,
-  MDBCardTitle,
+  MDBCardTitle,    
   MDBCardText,
   MDBContainer,
   MDBRow,
@@ -21,14 +21,14 @@ function Bed() {
   const navigate = useNavigate();
   const { products,setproducts} = useContext(Mycontext);
   // const FilterProduct = products.filter((e) => e.type.toLowerCase() === 'bed');
-  const categoryname= "bed"
+
   // const {categoryname} =useParams()
-  console.log(categoryname)
+
 
   useEffect(() => {
 const productBycategory=async()=>{
   try {
-    const response=await Axios.get(`/api/users/products/category/${categoryname}`) 
+    const response=await Axios.get(`/api/users/products/category/bed`) 
     console.log(response)
     if(response.status === 200){
       setproducts(response.data.data)
@@ -39,7 +39,6 @@ const productBycategory=async()=>{
     // Ensure error.message is a string before passing it to toast.error
     const errorMessage = error.message || "Failed to fetch products";
     toast.error(errorMessage);
-    
   }
 }
 productBycategory();

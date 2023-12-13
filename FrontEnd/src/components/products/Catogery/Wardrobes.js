@@ -20,23 +20,23 @@ function Wardrobes() {
   const navigate = useNavigate();
   const { products,setproducts } = useContext(Mycontext);
   // const FilterProduct = products.filter((e) => e.type.toLowerCase() === 'wardrobe');
-const categoryname="wardrobe"
+
 
   useEffect(() => {
- const productBycategory=async()=>{
-  try {
-    const response=await Axios.get(`/api/users/products/category/${categoryname}`)
-    console.log(response)
-    if(response.status === 200){
-      setproducts(response.data.data)
+    const productBycategory=async()=>{
+      try {
+        const response= await Axios.get(`/api/users/products/category/wardrob`)
+        // console.log(response)
+        if(response.status === 200){
+          setproducts(response.data.data)
+        }
+      } catch (error) {
+        console.log("errpr :",error)
+        toast.error(error)
+      }
     }
-  } catch (error) {
-    console.log("Error fetching product Category",error)
-    toast.error(error)
-  }
- }
- productBycategory()
- 
+    productBycategory()
+
     window.scrollTo(0, 0);
   }, []);
 

@@ -23,13 +23,12 @@ function Tables() {
   // const FilterProduct = products.filter(
   //   (e) => e.type.toLowerCase() === "table"
   // );
-const categoryname="table"
 
 
   useEffect(() => {
     const productBycategory=async()=>{
       try {
-        const response= await Axios.get(`/api/users/products/category/${categoryname}`)
+        const response= await Axios.get(`/api/users/products/category/table`)
         // console.log(response)
         if(response.status === 200){
           setproducts(response.data.data)

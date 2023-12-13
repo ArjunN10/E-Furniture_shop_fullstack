@@ -21,8 +21,7 @@ function Sofa() {
   const navigate = useNavigate();
   const { products,setproducts  } = useContext(Mycontext);
   // const FilterProduct = products.filter((e) => e.type.toLowerCase() === 'sofa');
-  const categoryname="sofa"
-
+const categoryname="sofa"
   useEffect(() => {
 const productBycategory=async()=>{
   try {
@@ -31,7 +30,7 @@ const productBycategory=async()=>{
     if(response.status === 200){
       setproducts(response.data.data)
     
-      // console.log(response.data.data) 
+       console.log(response.data.data) 
     }
   } catch (error) {
     console.log("error :",error)
@@ -41,7 +40,7 @@ const productBycategory=async()=>{
 productBycategory()
 
     window.scrollTo(0, 0);
-  }, [categoryname, setproducts, Axios]);
+  }, [ setproducts, Axios]);
 
   return (
     <>
