@@ -27,7 +27,7 @@ router
 .get("/products",TrycatchMiddleware(admincontroller.allproducts))
 .get("/products/:id",TrycatchMiddleware(admincontroller.productById))
 .delete("/products",TrycatchMiddleware(admincontroller.deleteProduct))
-.put("/products",TrycatchMiddleware(admincontroller.UpdateProduct))
+.patch("/products/:id",TrycatchMiddleware(admincontroller.UpdateProduct))
 .get("/orders",TrycatchMiddleware(admincontroller.AdminOrderDtails))  
 .get("/status",TrycatchMiddleware(admincontroller.status))   
 
