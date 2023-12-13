@@ -124,6 +124,7 @@ const handleChange=(e)=>{
           type="text"
            className="form-control" 
            id="title"
+           name='title'
            onChange={handleChange} 
             />
         </div>

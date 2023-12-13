@@ -9,7 +9,7 @@ module.exports = function verifyToken(req, res , next) {
     jwt.verify(token, process.env.ADMIN_ACCESS_TOKEN_SECRET, (err, decoded) => {
 
         if (err) {
-            return res.status(401).json({error:"Unatherized"})
+        return res.status(401).json({error:"Unatherized"})
         }
         req.email = decoded.email
         

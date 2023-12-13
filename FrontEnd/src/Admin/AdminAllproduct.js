@@ -3,8 +3,8 @@ import { MDBTable, MDBTableHead, MDBTableBody ,MDBBadge,MDBBtn} from 'mdb-react-
 import { useContext, useEffect } from 'react';
 import { Mycontext } from '../context/Context';
 import { useNavigate } from 'react-router-dom';
-import { Axios } from '../App';
 import toast from 'react-hot-toast';
+import { Axios } from '../App';
 // import Adminsidebar from './Adminsidebar';
 
 function AdminAllproduct() {
@@ -15,6 +15,7 @@ useEffect(()=>{
   const FetchProducts=async()=>{
     try {
       const response=await Axios.get("/api/admin/products")
+      console.log(response)
       if(response.status === 200){
         setproducts(response.data.data)
       }
@@ -45,9 +46,8 @@ useEffect(()=>{
         </tr>
       </MDBTableHead>
      
-      {products.map((item,index)=>
-     
       <MDBTableBody>
+      {products.map((item,index)=>
         <tr>
           <td>{item._id}</td>
           <td>
@@ -60,7 +60,6 @@ useEffect(()=>{
               />
               <div className='ms-3'>
                 <p className='fw-bold mb-1'>{item.title}</p>
-          
               </div>
             </div>
           </td>
@@ -89,15 +88,14 @@ useEffect(()=>{
             color='danger'
             rounded size='sm'
             onClick={()=>setproducts(p=>p.filter((a,i)=>i!=index))}
-            
             >
             Delete
             </MDBBtn>
           </td>
-               </tr>
-      </MDBTableBody>
+        </tr>
        )}
       
+       </MDBTableBody>
     </MDBTable>
     </div>
     </>

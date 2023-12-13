@@ -1,16 +1,49 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { MDBTable, MDBTableHead, MDBTableBody ,MDBBadge,MDBBtn} from 'mdb-react-ui-kit';
 import { Mycontext } from '../context/Context';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { Axios } from '../App';
 
 
 function AdminPageSofas() {
     const {products,setproducts}=useContext(Mycontext)
     console.log(products);
-  const sofalist=products.filter((e)=>e.type.toLowerCase() === 'sofa')
+  //   const category='sofa'
+  // const sofalist=products.filter((e)=>e.type.toLowerCase() === category)
 
     const navigate=useNavigate()
+
+
+    useEffect(() => {
+      const productBycategory=async()=>{
+        try {
+          const response = await Axios.get(`/api/users/products/category/sofa`)
+          console.log(response)
+          if(response.status === 200){
+            setproducts(response.data.data)
+          
+             console.log(response.data.data) 
+          }
+        } catch (error) {
+          console.log("error :",error)
+          toast.error(error)
+        }
+      }
+      productBycategory()
+      
+          window.scrollTo(0, 0);
+        }, [setproducts,Axios]);
+
+
+
+
+
+
+
+
+
   return (
     <div>
        <MDBTable responsive className='caption-top'>
@@ -26,21 +59,21 @@ function AdminPageSofas() {
           <th scope='col'>Offer Price</th>
         </tr>
       </MDBTableHead>
-      {sofalist.map((item,index)=>
+      {products.map((item,index)=>
      
       <MDBTableBody>
         <tr>
-          <td>{item.id}</td>
+          <td>{item._id}</td>
           <td>
             <div className='d-flex align-items-center'>
               <img
-                src={item.src}
+                src={item.image}
                 alt=''
                 style={{ width: '45px', height: '45px' }}
                 className='rounded-circle'
               />
               <div className='ms-3'>
-                <p className='fw-bold mb-1'>{item.name}</p>
+                <p className='fw-bold mb-1'>{item.title}</p>
           
               </div>
             </div>

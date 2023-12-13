@@ -15,14 +15,14 @@ module.exports={
 
      login: async (req, res) => {
         const { email, password } = req.body;
-        // console.log("admin:",email,password)
+        // console.log("admin:",email,password)  
         if (
           email === process.env.ADMIN_EMAIL &&
-          password === process.env.ADMIN_PASSWORD
+          password === process.env.ADMIN_PASSWORD     
         ) {
           const toekn = jwt.sign(
             { email },
-            process.env.ADMIN_ACCESS_TOKEN_SECRET
+            process.env.ADMIN_ACCESS_TOKEN_SECRET  
           );
           return res.status(200).json({
             statu: "Succes",
@@ -123,7 +123,7 @@ res.status(200).json({
     message:"All product details fetched successfully",
     data:productsList
 })
-
+console.log(productsList)  
 },
 
 

@@ -29,7 +29,7 @@ router
 .delete("/products",TrycatchMiddleware(admincontroller.deleteProduct))
 .patch("/products/:id",TrycatchMiddleware(admincontroller.UpdateProduct))
 .get("/orders",TrycatchMiddleware(admincontroller.AdminOrderDtails))  
-.get("/status",TrycatchMiddleware(admincontroller.status))   
+.get("/status",TrycatchMiddleware(admincontroller.status))        
 
 
 
