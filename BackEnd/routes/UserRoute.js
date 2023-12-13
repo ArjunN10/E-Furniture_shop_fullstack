@@ -9,8 +9,8 @@ const TrycatchMiddleware = require("../middlewares/TryCatchMiddleware")
 router
 .post("/register",TryCatchMiddleware(usercontroller.UserRegister))
 .post("/login",TryCatchMiddleware(usercontroller.userlogin))
-
-.use(userVerifytoken)        
+    
+.use(userVerifytoken)             
 
 .get("/products",TrycatchMiddleware(usercontroller.ViewProduct))
 .get("/products/:id",TrycatchMiddleware(usercontroller.productById))
