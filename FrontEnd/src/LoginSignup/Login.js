@@ -40,16 +40,18 @@ function Login() {
       console.log(response)
 
       if(response.status === 200){
-        eml !== Adminemail && localStorage.setItem("UserId",response.data.data.id)
         eml === Adminemail && localStorage.setItem("role","admin")
-        localStorage.setItem("jwt",response.data.data)
-        localStorage.setItem("UserEmail",response.data.eml)
+        eml !== Adminemail && localStorage.setItem("UserId",response.data.data.id)
+        localStorage.setItem("jwt",response.data.data.Token)
+        localStorage.setItem("UserEmail",response.data.data.email)
         localStorage.setItem("UserName",response.data.data.Username)
+
+        console.log(Adminemail)
+        console.log(response.data.data.id)
         console.log(response.data.data.Token)
-        console.log(response.data.data)
-        // console.log(eml)
-        // console.log(Adminemail)
-        // console.log(response.data.data.id)
+        console.log(response.data.data.email)
+        console.log(response.data.data.Username)
+
         if(eml === Adminemail){
           navigate("/adminhome/")
           toast.success("Admin Login Successfull")
