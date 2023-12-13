@@ -41,16 +41,18 @@ function Login() {
 
       if(response.status === 200){
         eml === Adminemail && localStorage.setItem("role","admin")
+        eml === Adminemail && localStorage.setItem("Admin jwt",response.data.data)
         eml !== Adminemail && localStorage.setItem("UserId",response.data.data.id)
         localStorage.setItem("jwt",response.data.data.Token)
         localStorage.setItem("UserEmail",response.data.data.email)
         localStorage.setItem("UserName",response.data.data.Username)
 
-        console.log(Adminemail)
-        console.log(response.data.data.id)
-        console.log(response.data.data.Token)
-        console.log(response.data.data.email)
-        console.log(response.data.data.Username)
+        // console.log(Adminemail)
+        // console.log(response.data.data.id)
+        // console.log(response.data.data.Token)
+        // console.log(response.data.data.email)
+        // console.log(response.data.data.Username)
+        // console.log(response.data.data)
 
         if(eml === Adminemail){
           navigate("/adminhome/")
@@ -61,6 +63,7 @@ function Login() {
             localStorage.removeItem("UserId")
             localStorage.removeItem("UserEmail")
             localStorage.removeItem("UserName")
+            localStorage.removeItem("Admin jwt")
 
           },3600000)
           navigate("/")
