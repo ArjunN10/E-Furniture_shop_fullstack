@@ -44,7 +44,7 @@ allusers:async(req,res)=>{
     
     const allusers=await userDatabase.find()
 // console.log(allusers);
-    if(allusers.length === 0){
+    if(allusers.length === 0){   
         res.status(404).json({
             status:"error",
             message:"No Userdata Found"
@@ -184,7 +184,7 @@ if(error){
         status:"error",
         message:error.details[0].message
     })
-}
+}     
 const {id,title,image,price,category,description}=value;
 
 const product=await products.find()

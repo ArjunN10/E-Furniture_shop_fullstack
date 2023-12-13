@@ -1,18 +1,36 @@
 import { MDBTable, MDBTableHead, MDBTableBody ,MDBBadge,MDBBtn} from 'mdb-react-ui-kit';
 // import AdminNav from './AdminNav';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Mycontext } from '../context/Context';
 import { useNavigate } from 'react-router-dom';
+import { Axios } from '../App';
+import toast from 'react-hot-toast';
 // import Adminsidebar from './Adminsidebar';
 
 function AdminAllproduct() {
   const navigate=useNavigate()
   const {products,setproducts}=useContext(Mycontext)
 
+useEffect(()=>{
+  const FetchProducts=async()=>{
+    try {
+      const response=await Axios.get("/api/admin/products")
+      if(response.status === 200){
+        setproducts(response.data.data)
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error) 
+    }
+  }
+  FetchProducts()
+},[])
+
+
+
   return (
     <>
     <div >
-
 <MDBTable responsive className='caption-top '>
 <caption className='ps-5 pt-5'><h4>TOTAL PRODUCTS:{products.length}</h4></caption>
       <MDBTableHead>
@@ -31,17 +49,17 @@ function AdminAllproduct() {
      
       <MDBTableBody>
         <tr>
-          <td>{item.id}</td>
+          <td>{item._id}</td>
           <td>
             <div className='d-flex align-items-center'>
               <img
-                src={item.src}
+                src={item.image}
                 alt='Photos'
                 style={{ width: '45px', height: '45px' }}
                 className='rounded-circle'
               />
               <div className='ms-3'>
-                <p className='fw-bold mb-1'>{item.name}</p>
+                <p className='fw-bold mb-1'>{item.title}</p>
           
               </div>
             </div>
@@ -55,7 +73,7 @@ function AdminAllproduct() {
               Available
             </MDBBadge>
           </td>
-          <td>{item.type}</td>
+          <td>{item.category}</td>
           <td>{item.price}</td>
           <td>{item.price2}</td>
           <td>
