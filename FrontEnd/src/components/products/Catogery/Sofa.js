@@ -22,6 +22,7 @@ function Sofa() {
   const { products,setproducts  } = useContext(Mycontext);
   // const FilterProduct = products.filter((e) => e.type.toLowerCase() === 'sofa');
 const categoryname="sofa"
+
   useEffect(() => {
 const productBycategory=async()=>{
   try {
@@ -40,7 +41,7 @@ const productBycategory=async()=>{
 productBycategory()
 
     window.scrollTo(0, 0);
-  }, [ setproducts, Axios]);
+  }, [setproducts,Axios]);
 
   return (
     <>
