@@ -55,7 +55,7 @@ UserRegister: async (req, res) => {
 
 userlogin:async(req,res)=>{
 const {value,error}=joiUserSchema.validate(req.body)
-// console.log(req.body)
+console.log(value)
 if(error){
     return res.json(error.message)
 }
@@ -119,9 +119,8 @@ ViewProduct:async(req,res)=>{
 //View a specific product
 
 productById:async(req,res)=>{
-    const productId=req.params.id
+    const productId=req.params.id   
     const prdt=await Products.findById(productId)
-    // console.log(prdt);
     if(!prdt){
         res.status(404).json({
             status:"error",
@@ -140,7 +139,7 @@ productById:async(req,res)=>{
 // view product Category
 
 productBycategory:async(req,res)=>{
-const productCategory=req.params.categoryname
+const productCategory=req.params.categoryname   
 try {
        // Use a case-insensitive regular expression for the category search
        const products = await Products.find({
@@ -152,13 +151,12 @@ try {
           status: 'error',
           message: 'No products found in the specified category',
         });
-      }
-  
-      res.status(200).json({
+    }
+    res.status(200).json({
         status: 'success',
         message: 'Product Category Fetched ✅',
         data: products,
-      });
+    });
 } catch (error) {
     console.error('Error fetching products by category:', error);
     res.status(500).json({
@@ -166,6 +164,7 @@ try {
       message: 'Internal Server Error',
     })
 }
+},
 // const Prdct=await Products.find({category:productCategory})
 // // console.log(Prdct)
 // if(!Prdct){
@@ -176,19 +175,18 @@ try {
 // }  
 // res.status(200).json({
 //     status:"success",
-//     message:"Product Category Fetched✅",
+//     message:"Product Category Fetched✅",   
 //     data:Prdct   
     
 // })   
 // console.log(data)
 
-},
 
   
 // Add to Cart
 
     addToCart:async (req, res) => {
-        const userId = req.params.id;
+        const userId = req.params.id;  
 
         console.log(typeof(userId))
         const user = await UserSchema.findById(userId);
@@ -200,8 +198,6 @@ try {
         } 
         const { productId } = req.body;
 
-        // console.log(typeof(productId),"iggggg");
-    
         // Check if productId is provided
         if (!productId) {
         return res.status(404).json({
@@ -237,29 +233,29 @@ try {
 
 //add cart quantity
 
-// updateCartItemQuantity: async (req, res) => {
-//     console.log(req.body)
-//     const userID = req.params.id; 
-//     const { id, quantityChange } = req.body;
+updateCartItemQuantity: async (req, res) => {
+    console.log(req.body)
+    const userID = req.params.id;    
+    const { id, quantityChange } = req.body;
   
-//     const user = await User.findById(userID);
-//     if (!user) { return res.status(404).json({ message: 'User not found' }) }
+    const user = await User.findById(userID);
+    if (!user) { return res.status(404).json({ message: 'User not found' }) }
   
-//     const cartItem = user.cart.id(id);
-//     if (!cartItem) { return res.status(404).json({ message: 'Cart item not found' }) }
+    const cartItem = user.cart.id(id);
+    if (!cartItem) { return res.status(404).json({ message: 'Cart item not found' }) }
   
-//     cartItem.quantity += quantityChange;
+    cartItem.quantity += quantityChange;
   
-//     if (cartItem.quantity > 0) {
-//       await user.save();
-//     }
+    if (cartItem.quantity > 0) {
+      await user.save();
+    }
   
-//     res.status(200).json({
-//       status: 'success',
-//       message: 'Cart item quantity updated',
-//       data: user.cart
-//     });
-//   },
+    res.status(200).json({
+      status: 'success',
+      message: 'Cart item quantity updated',
+      data: user.cart
+    });
+  },
   
 
 
@@ -267,35 +263,77 @@ try {
 
 //view product from cart
 
-ViewCart:async(req,res)=>{
-    const UserId=req.params.id
-    const user=await userdatabase.findById(UserId)
-    // console.log(user) 
+ViewCart: async (req, res) => {
+    const userId = req.params.id;
+  
+    try {
+      const user = await userdatabase.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({
+          status: "error",
+          message: "User Not Found",
+        });
+      }
+  
+      const cartProducts = await userdatabase.findById(userId).populate("cart.productsId");
+      if (!cartProducts) {
+        return res.status(200).json({
+          status: "Success",
+          message: "User Cart is Empty",
+          data: [],
+        });
+      }
+  
+      res.status(200).json({
+        status: "success",
+        message: "Cart Products Fetched Successfully",  
+        data: cartProducts,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        status: "error",
+        message: "Internal Server Error",
+      });
+    }
+  },
+  
+
+
+
+// Remove A cart
+
+removeCartProduct:async(req,res)=>{
+    const userId=req.params.id
+    const itemId=req.params.ItemId
+
+    if(!itemId){
+        return res.status(400).json({
+            status:"error",
+            message:"Product not found"
+        })
+    }
+    const user= await userdatabase.findById(userId)
     if(!user){
-        res.status(404).json({
+        return res.status(400).json({
             status:"error",
             message:"User Not Found"
-        })
-    } 
-    const cartProductId = user.cart;
-    // console.log("cartProductId:", cartProductId);
-    
-    if (cartProductId.length === 0) {
-        return res.status(200).json({
-            status: "Success",
-            message: "User Cart is Empty",
-            data: [],
-        });
+        })   
     }
-const cartProducts = await UserSchema.findOne({ _id:UserId}).populate("cart.productsId")
-// console.log(cartProducts)
-res.status(200).json({
-    status: "success",
-    message: "Cart Product Fetched Successfully",
-    data: cartProducts,
-});
-
+    const result = await userdatabase.updateOne( 
+        { _id: userId },
+        { $pull: { cart: { productsId:itemId } } }
+      );
+       
+    if (result.modifiedCount > 0) {
+        console.log("Item removed successfully");
+        res.status(200).json({message:"Product removed successfuly",data: result})
+      } else {
+        console.log("Item not found in the cart");
+      }
 },
+
 
 
 
