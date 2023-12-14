@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   MDBBtn,
   MDBCard,
@@ -10,38 +10,88 @@ import {
   MDBRow,
   MDBTypography,
 } from "mdb-react-ui-kit";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Mycontext } from "../../../context/Context";
 import Counter from "../Counter";
 import Footer from "../../Footer";
+import { Axios } from "../../../App";
+import toast from "react-hot-toast";
 
 function Addcart() {
-  const { addcart, setaddcart } = useContext(Mycontext);
+  const [addcart, setaddcart ] = useState([])
   const navigate = useNavigate();
 
   const handleBackToShopping = () => {
     navigate("/");
   };
 
-  const removeItem = (itemId) => {
-    const updatedCart = addcart.filter((item) => item.id !== itemId);
-    setaddcart(updatedCart);
-  };
+const {id}=useParams()
 
-  const [count, setCount] = useState(1);
-
-  const increaseCount = () => {
-    setCount(count + 1);
-  };
-
-  const decreaseCount = () => {
-    if (count > 1) {
-      setCount(count - 1);
+const userid=localStorage.getItem("UserId")
+const FetchCartproducts=async()=>{
+  try {
+    const response=await Axios.get(`/api/users/${userid}/cart`)
+    if(response.status === 200){
+      setaddcart(response.data.data.cart)
     }
-  };
+  } catch (error) {
+    console.log(error)
+    toast.error(error)      
+  }
+}
+useEffect(()=>{
+  FetchCartproducts() 
+},[])
 
-  const totalsum = addcart.map((priceid) => priceid.price2 * priceid.qty);
-  const totprice = totalsum.reduce((acc, val) => acc + val, 0);
+
+
+// Handle Product Quantity
+
+const handleQuantity=async(cartId,quantityChange)=>{
+  const data={id:cartId,quantityChange}
+  try {
+    await Axios.put(`/api/users/${id}/cart`,data)
+    const response=await Axios.get(`/api/users/${userid}/cart`)
+    if(response.status === 200){
+      return FetchCartproducts()
+    }
+  } catch (error) {
+    toast.error(error) 
+  }
+}
+
+
+// Handle Product Remove
+const handleRemoveItem=async(ItemId)=>{
+  try {
+    const response=await Axios.delete(`/api/users/${id}/cart/${ItemId}`)
+    if (response.status === 200) {
+      toast.success(response.data.message)
+      return FetchCartproducts()
+    }
+  } catch (error) {
+    console.error(error);
+    toast.error('Error removing product from the cart');
+  }
+}
+
+
+//Handle Checkout
+
+const handleCheckout=async()=>{
+  try {
+    const response=await Axios.post(`/api/users/${userid}/payment`)
+    if(response.status === 200){
+     const url=response.data.url
+     const conformation=window.confirm("Payment session created. Redirecting to the payment gateway. Continue?")
+      if(conformation)window.location.replace(url)
+    }
+  } catch (error) {
+    toast.error(error.response.data.message)
+  }
+}
+
+
 
   return (
     <section className="h-auto h-custom" style={{ backgroundColor: "#eee" }}>
@@ -56,15 +106,14 @@ function Addcart() {
                 >
                   Cart products
                 </MDBTypography>
-
-                {addcart.map((item) => (
-                  <div className="d-flex align-items-center mb-4" key={item.id}>
+                { addcart.map((item) => (
+                  <div className="d-flex align-items-center mb-4" key={item.productsId._id}>
                     <div className="flex-shrink-0">
                       <MDBCardImage
-                        src={item.src}
+                        src={item.productsId.image}
                         fluid
                         style={{ maxWidth: "150px" }}
-                        alt={item.name}
+                        alt={item.productsId.title}
                       />
                     </div>
 
@@ -72,19 +121,30 @@ function Addcart() {
                       <a
                         href="#!"
                         className="float-end text-black"
-                        onClick={() => removeItem(item.id)}
+                        onClick={() =>  handleRemoveItem(item._id)}
                       >
                         <MDBIcon fas icon="times" />
                       </a>
                       <MDBTypography tag="h5" className="text-primary">
-                        {item.name}
+                        {item.productsId.title}
                       </MDBTypography>
-
                       <div className="d-flex align-items-center">
-                        <p className="fw-bold mb-0 me-4">Price: ${item.price2}</p>
-                        <div className="def-number-input number-input safari_only">
-                          <Counter obj={item} />
-                        </div>
+                        <p className="fw-bold mb-0 me-4">Price: ${item.productsId.price}</p>
+                        <MDBBtn
+                                style={{ border: "1px" }}
+                                className="minus mx-3 "
+                                onClick={() => handleQuantity(item.productsId._id, -1)}
+                              >
+                                <MDBIcon fas icon="minus" />
+                              </MDBBtn>
+                             <span className="me-4">{item.quantity}</span>
+                              <MDBBtn
+                                className="plus"
+                                style={{ border: "1px" }}
+                               onClick={() => handleQuantity(item.productsId._id, 1)}
+                              >
+                            <MDBIcon fas icon="plus" />
+                          </MDBBtn>
                       </div>
                     </div>
                   </div>
@@ -96,10 +156,10 @@ function Addcart() {
           <MDBCol lg="5">
             <form className="mb-4">
               <MDBTypography tag="h5" className="fw-bold mb-4">
-                <p className="text-center fw-bold text-uppercase">GRAND TOTAL: ${totprice}</p>
+                <p className="text-center fw-bold text-uppercase">GRAND TOTAL: ${}</p>
               </MDBTypography>
               <MDBBtn
-                onClick={() => navigate("/bill")}
+                onClick={() => handleCheckout()}
                 className="mb-3"
                 block
                 size="lg"
