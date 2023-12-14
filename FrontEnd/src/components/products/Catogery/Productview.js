@@ -25,6 +25,7 @@ function Productview() {
 const userid=localStorage.getItem("UserId")
 const isuser=localStorage.getItem("UserName")
 const [products,setproducts]=useState([])
+console.log(userid)
 console.log(products.title)
 
   // const idproduct = () => {
@@ -40,7 +41,7 @@ console.log(products.title)
   //     alert("You must log in");
   //     navigate("/");
   //   }
-  // };
+  // };  
 
   useEffect(() => {
     const FetchById=async()=>{
@@ -52,18 +53,18 @@ console.log(products.title)
         }
       } catch (error) {
         console.log("Error fetching product details")
-        toast.error(error.message)
+        toast.error(error)
       }
     }
     FetchById()
 
     window.scrollTo(0, 0);
-  }, []);
+  }, []); 
 
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (id) => {
     try {
-      const response = await Axios.post( `/api/users/${userid}/cart`,{producId: id })
+      const response = await Axios.post( `/api/users/${userid}/cart`,{productId: id })
       console.log(response);
       if (response.status === 200){
         await Axios.get(`/api/users/${userid}/cart`)
@@ -71,7 +72,7 @@ console.log(products.title)
       }
       
     } catch (error) {
-      console.error('Error adding product to the cart:', error);
+      console.error('Error adding product to the cart:', error)
       toast.error(error.response.data.message)
     }
   };
@@ -116,9 +117,9 @@ console.log(products.title)
                       <p className="lead">
                         <span className="me-1">
                           <h1>{products.title}</h1>
-                          <h5>
+                          {/* <h5>
                             Price :<del>${products.price2}</del>
-                          </h5>
+                          </h5> */}
                         </span>
                         <h3>
                           <span className="blockquote-footer">
@@ -142,7 +143,7 @@ console.log(products.title)
                           color="primary"
                           className="ms-1"
                           id={products.id}
-                          onClick={() => handleAddToCart()}
+                          onClick={() => handleAddToCart(products._id)}
                         >
                           Add to cart <i className="fas fa-shopping-cart ms-1"></i>
                         </MDBBtn>
@@ -152,7 +153,7 @@ console.log(products.title)
                           color="outline-primary"
                           size="lg"
                           id={products.id}
-                          onClick={() => handleAddToCart() }
+                          onClick={() => handleAddToCart(products._id)}
                         >
                           BUY NOW
                         </MDBBtn>
