@@ -23,7 +23,7 @@ function Login() {
     const eml = e.target.email.value.trim();
     const password = e.target.pwd.value;
     const Adminemail=process.env.REACT_APP_ADMIN_EMAIL
-    console.log(Adminemail)
+    // console.log(Adminemail)
 
     if(eml === "" || password === ""){
       toast.error("Inuput Field is Empty")
@@ -37,7 +37,7 @@ function Login() {
     try {  
       const payload= {email:eml,password};
       const response=await Axios.post(url,payload)
-      console.log(response)
+      // console.log(response)
 
       if(response.status === 200){
         eml === Adminemail && localStorage.setItem("role","admin")
