@@ -19,35 +19,18 @@ function Productview() {
   const navigate = useNavigate();
   const {  addcart, setaddcart, loggedIn } = useContext(Mycontext);
   const { id } = useParams();
-  console.log(id)
-  // const productfilter = products.filter((p) => p.id === parseInt(id));
+  // console.log(id)
 
 const userid=localStorage.getItem("UserId")
 const isuser=localStorage.getItem("UserName")
 const [products,setproducts]=useState([])
-console.log(userid)
-console.log(products.title)
-
-  // const idproduct = () => {
-  //   if (loggedIn === false) {
-  //     if (addcart.includes(productfilter[0])) {
-  //       alert("Your product is already in your cart");
-  //       navigate("/");
-  //     } else {
-  //       setaddcart([...addcart, ...productfilter]);
-  //       navigate("/addcart");
-  //     }
-  //   } else {
-  //     alert("You must log in");
-  //     navigate("/");
-  //   }
-  // };  
+// console.log(userid)
+// console.log(products.title)
 
   useEffect(() => {
     const FetchById=async()=>{
       try {
         const response=await Axios.get(`/api/users/products/${id}`)
-        console.log(response)
         if(response.status === 200){
           setproducts(response.data.data || [])
         }
@@ -65,10 +48,13 @@ console.log(products.title)
   const handleAddToCart = async (id) => {
     try {
       const response = await Axios.post( `/api/users/${userid}/cart`,{productId: id })
-      console.log(response);
       if (response.status === 200){
         await Axios.get(`/api/users/${userid}/cart`)
-        toast.success("Product added to the cart!")
+          return toast.success("Product added to the cart!")
+      }
+      if(response.status === 400){
+         return toast.error("Product already included!!")
+
       }
       
     } catch (error) {
@@ -83,9 +69,7 @@ console.log(products.title)
     <>
       <div className="sticky-top">
         <Nav />
-      </div>
-      {/* { */}
-      
+      </div>      
         <div key={products._id}>
           <main className="mt-5 pt-4">
             <MDBContainer className="mt-5">
@@ -268,10 +252,6 @@ console.log(products.title)
             </MDBContainer>
           </main>
         </div>
-      {/* // ))
-      ) : (
-        <p>No product details available</p>
-      )} */}
       <div className='mt-3'>
         <Footer />
       </div>
