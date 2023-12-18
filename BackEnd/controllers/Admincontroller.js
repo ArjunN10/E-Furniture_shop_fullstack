@@ -112,8 +112,9 @@ addproduct:async(req,res)=>{
 
 allproducts:async(req,res)=>{
 const productsList= await products.find();
+console.log( productsList)
 if(!productsList){
-    res.status(404).json({
+    return res.status(404).json({
         status:"error",
         message:"Products not found"
     })
@@ -165,7 +166,7 @@ deleteProduct:async(req,res)=>{
         return res.status(404).json({
             status:"error",
             message:"Product Not Found in Database"
-        })
+        }) 
     }
     return res.status(200).json({
         status:"success",
@@ -180,7 +181,7 @@ UpdateProduct:async(req,res)=>{
 const {value,error}= joiProductSchema.validate(req.body)
 
 if(error){
-    return res.status(404).json({
+    return res.status(404).json({   
         status:"error",
         message:error.details[0].message
     })
@@ -262,5 +263,19 @@ status:async(req,res)=>{
              })
          }
     },
+
+// viewBydisc:async(req,res)=>{
+//     const desctription=req.params.description
+
+//     const product=await products.find({desciption:desctription})
+//     return res.status(200).json({
+//         status:"succes",
+//         data:product
+//     })
+
+// }
+
+
+
 }
 
