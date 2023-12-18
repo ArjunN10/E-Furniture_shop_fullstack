@@ -22,7 +22,6 @@ function Addcart() {
 const userid=localStorage.getItem("UserId")
 
 
-
   const handleBackToShopping = () => {
     navigate("/");
   };
@@ -30,7 +29,6 @@ const userid=localStorage.getItem("UserId")
 const FetchCartproducts=async()=>{
   try {
     const response=await Axios.get(`/api/users/${userid}/cart`)
-    console.log("res",response)
     if(response.status === 200){
       setaddcart(response.data.data)
     }
@@ -43,8 +41,7 @@ useEffect(()=>{
   FetchCartproducts() 
 },[])
 
-console.log("----------------",addcart)
-
+ 
 // Handle Product Quantity
 
 const handleQuantity=async(id,quantityChange)=>{
@@ -63,6 +60,7 @@ const handleQuantity=async(id,quantityChange)=>{
 
 
 // Handle Product Remove
+
 const handleRemoveItem=async(itemId)=>{
   try {
     const response=await Axios.delete(`/api/users/${userid}/cart/${itemId}`)
@@ -83,6 +81,7 @@ const handleRemoveItem=async(itemId)=>{
 const handleCheckout=async()=>{
   try {
     const response=await Axios.post(`/api/users/${userid}/payment`)
+    console.log("payy",response)
     if(response.status === 200){
      const url=response.data.url
      const conformation=window.confirm("Payment session created. Redirecting to the payment gateway. Continue?")
@@ -92,12 +91,9 @@ const handleCheckout=async()=>{
     toast.error(error.response.data.message)
   }
 }
-
 const calculateTotal = (cartItems) => {
   return cartItems.reduce((total, item) => total + item.productsId.price * item.quantity, 0).toFixed(2);
 };
-
-
 
   return (
     <section className="h-auto h-custom" style={{ backgroundColor: "#eee" }}>
