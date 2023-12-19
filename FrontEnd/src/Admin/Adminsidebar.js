@@ -39,7 +39,7 @@ function AdminSidebar() {
 
               <Button
                 onClick={() => navigateTo("adminAllproduct")}
-                className="text-black mb-4 btn-white"
+                className="text-black mb-4 "
               >
                 All Products
               </Button>
