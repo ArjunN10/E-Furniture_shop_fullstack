@@ -11,6 +11,10 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { Axios } from "../App";
+import GoogleButton from "react-google-button"
+import {auth,provider} from "../Apis/Firebase"
+import {  signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import axios from "axios";
 
 
 
@@ -32,7 +36,7 @@ function Login() {
     let url="http://localhost:3003/api/users/login"
 
     if(eml === Adminemail ){
-        url="http://localhost:3003/api/admin/login";
+        url="http://localhost:3003/api/admin/login";  
     }
     try {  
       const payload= {email:eml,password};
@@ -79,6 +83,36 @@ function Login() {
     }
   };
 
+  const handleGoogleLogin=async()=>{
+    try {
+        const data = await signInWithPopup(auth, provider);
+  const credential = GoogleAuthProvider.credentialFromResult(data);
+  const user = data.user;
+  // console.log("credential:",credential);
+  // console.log("user",user);
+
+
+  try {
+
+    const response=await axios.post("http://localhost:3003/api/users/googleauthlogin",user)
+    if(response.status==201||203){
+      toast.success("login successfull")
+      localStorage.setItem("jwt",response.data.data)
+      localStorage.setItem("UserEmail",response.data.userid.email)
+      localStorage.setItem("UserName",response.data.userid.username)
+      localStorage.setItem("UserId",response.data.userid._id)
+      navigate("/")
+    }
+
+    
+  } catch (error) {
+   toast.error(error)
+  }
+    } catch (error) {
+     alert(error)
+    }
+}
+
   return (
     <div>
       <MDBContainer
@@ -123,7 +157,10 @@ function Login() {
                   <MDBBtn className="w-100 mb-4" size="md">
                     sign in
                   </MDBBtn>
-
+                  <GoogleButton
+               type="light" // can be light or dark
+               onClick={handleGoogleLogin}
+                  />
                   <div className="text-center">
                     <p>
                       {" "}

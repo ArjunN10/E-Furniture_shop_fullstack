@@ -5,7 +5,6 @@ import React, { useState } from 'react'
 import Login from './LoginSignup/Login';
 import Signup from './LoginSignup/Signup';
 import { Mycontext } from './context/Context';
-import { productsList } from './components/products/Productslist';
 import Sofa from './components/products/Catogery/Sofa';
 import Tables from './components/products/Catogery/Tables';
 import Bed from './components/products/Catogery/Bed';
@@ -26,6 +25,8 @@ import AdminPageChairs from './Admin/AdminPageChairs';
 import AdminPageWardrobes from './Admin/AdminPageWardrobes';
 import AdminPageTables from './Admin/AdminPageTables';
 import AdminUserList from './Admin/AdminUserList';
+// import SuccessPayment from './components/products/Catogery/SuccessPayment';
+import SuccessPayment from './components/products/Catogery/SuccessPayment';
 import axios from 'axios'
 import { Toaster } from 'react-hot-toast';
 
@@ -44,8 +45,33 @@ const [products,setproducts]=useState([])
 const [user,setuser]=useState([])
 const [username,setusername]=useState([])
 const [addcart,setaddcart]=useState([])
-// const [Payment,setpayment]=useState([])
 const [loggedIn, setLoggedIn] = useState(false);
+
+// const [wishLit ,setWishlist] = useState([])
+// const [wishStatus, setWishStatus] = useState(false)
+// const userId=localStorage.getItem("UserId")
+
+
+// add Wishlist
+
+// const AddToWishlist=async(){
+//   try {
+//     await Axios.post(`/api/users/${userId}/wishlists`,{productId})
+//       const response = await Axios.get(`api/users/${userId}/wishlists`)
+//       if(response.status === 200){
+//         toast.success("Added to wishlist")
+//         setWishlist(response.data.data)
+
+//       }
+//   } catch (error) {
+    
+//   }
+// }
+
+
+
+
+
   return (
     <>
     <Mycontext.Provider value={{products,setproducts,user,setuser,username,setusername,addcart,setaddcart,loggedIn, setLoggedIn}}>
@@ -65,6 +91,7 @@ const [loggedIn, setLoggedIn] = useState(false);
       <Route path='/allproducts' element={<Allproducts/>}/>
       <Route path='/addcart' element={<Addcart/>}/>
       <Route path='/bill' element={<Paymentpage/>}/>
+      <Route path="/payment/success" element={<SuccessPayment/>}/>
       <Route path='/*' element={<Externalpage/>}/>
 
   <Route path="/adminhome/" element={<AdminHome />}>
