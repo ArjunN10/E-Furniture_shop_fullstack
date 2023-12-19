@@ -10,6 +10,7 @@ const Usercontroller = require("../controllers/Usercontroller")
 router
 .post("/register",TryCatchMiddleware(usercontroller.UserRegister))
 .post("/login",TryCatchMiddleware(usercontroller.userlogin))
+.post("/googleauthlogin",TryCatchMiddleware(usercontroller.googleAuthLogin))
     
 .use(userVerifytoken)             
 

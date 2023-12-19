@@ -17,7 +17,6 @@ module.exports={
 //User Register
 
 UserRegister: async (req, res) => {
-    // console.log(req.body)
     const { value, error } = joiUserSchema.validate(req.body);
     if (error) {
         return res.status(400).json({
@@ -41,7 +40,6 @@ UserRegister: async (req, res) => {
             message: "User registration successful",
         });
     } catch (err) {
-        // console.error("Error during user registration:", err);
         res.status(500).json({
             status: "Error",
             message: "Internal Server Error",
@@ -55,7 +53,7 @@ UserRegister: async (req, res) => {
 
 userlogin:async(req,res)=>{
 const {value,error}=joiUserSchema.validate(req.body)
-console.log(value)
+// console.log(value)
 if(error){
     return res.json(error.message)
 }
@@ -63,10 +61,8 @@ const {email,password}=value
 const user =await userdatabase.findOne({
     email:email,
 })
-// console.log(user)
 const id=user.id
 const Username=user.username
-// console.log(Username)
 if(!user){
 return res.status(404).json({
     status:"errror",
@@ -98,6 +94,41 @@ res.status(200).json({
 },
 
 
+//Google Auth
+
+
+googleAuthLogin:async(req,res)=>{
+  const {email, displayName}=req.body
+  console.log(req.body)
+try {
+  const existUser=await userdatabase.findOne({email:email})
+  if(existUser){
+    const Token=jwt.sign({email:existUser.email},process.env.USER_ACCES_TOKEN_SECRET,
+    { expiresIn:8500})
+      res.status(201).json({
+        status:"success",
+        message:"Login success",
+        data:Token,
+        userid:existUser
+      })
+  }
+  if(!existUser){
+    const user=new UserSchema({username: displayName,email:email})
+    await user.save()
+    const Token=jwt.sign({email:existUser.email},process.env.USER_ACCES_TOKEN_SECRET,
+      { expiresIn:8500})
+  const ExistUser=await userdatabase.findOne({email:email})
+
+    res.status(203).json({message:'user Loggined successfully', data:Token, 
+    userid:ExistUser})
+  }
+} catch (error) {
+  console.log(error) 
+}
+},
+
+
+
 //view All product By categoury
 
 ViewProduct:async(req,res)=>{
@@ -120,8 +151,8 @@ ViewProduct:async(req,res)=>{
 
 productById:async(req,res)=>{
     const productId=req.params.id   
-    const prdt=await Products.findById(productId)
-    if(!prdt){
+    const product=await Products.findById(productId)
+    if(!product){
         res.status(404).json({
             status:"error",
             message:"product not found"
@@ -130,7 +161,7 @@ productById:async(req,res)=>{
     res.status(200).json({
         status:"success",
         message:"product fetched successfully✅",
-        data:prdt
+        data:product
     })
 
 },
@@ -185,18 +216,19 @@ try {
   
 // Add to Cart
 
-    addToCart:async (req, res) => {
+    addToCart:async (req, res) => {  
         const userId = req.params.id;  
 
-        console.log(typeof(userId))
+        // console.log(typeof(userId))
         const user = await UserSchema.findById(userId);
         if (!user) {
         return res.status(404).json({
-            status: "error",
+            status: "error", 
             message: "User Not Found",
         });
         } 
         const { productId } = req.body;
+
 
         // Check if productId is provided
         if (!productId) {
@@ -211,10 +243,20 @@ try {
                 message: "Invalid Product ID",
             });
         }
+      //  check if product already in cart
+        const isProductInCart = user.cart.some(item => item.productsId.equals(productId));
+
+        if (isProductInCart) {
+            return res.status(400).json({
+                status: "error",
+                message: "Product already in cart",
+            });
+        }
         const productObject = {
             productsId: new  ObjectId(productId),
             quantity: req.body.quantity,      
         }
+        
         try {
         await UserSchema.updateOne({ _id: user._id }, { $addToSet: { cart:productObject } });
         res.status(200).json({
@@ -231,25 +273,27 @@ try {
     },
 
 
+
 //add cart quantity
 
 updateCartItemQuantity: async (req, res) => {
-    console.log(req.body)
-    const userID = req.params.id;    
-    const { id, quantityChange } = req.body;
+    const userID = req.params.id;   
+    const { id, quantityChange } = req.body; 
   
-    const user = await User.findById(userID);
-    if (!user) { return res.status(404).json({ message: 'User not found' }) }
-  
-    const cartItem = user.cart.id(id);
-    if (!cartItem) { return res.status(404).json({ message: 'Cart item not found' }) }
-  
-    cartItem.quantity += quantityChange;
+    const user = await userdatabase.findById(userID);
+    if (!user) { 
+      return res.status(404).json({ message: 'User not found' }) 
+    }
+    const cartItem = user.cart.id(id)
+    console.log("ggg",cartItem );
+    if (!cartItem) { 
+      return res.status(404).json({ message: 'Cart item not found' }) 
+    }
+    cartItem.quantity += quantityChange
   
     if (cartItem.quantity > 0) {
       await user.save();
     }
-  
     res.status(200).json({
       status: 'success',
       message: 'Cart item quantity updated',
@@ -264,40 +308,42 @@ updateCartItemQuantity: async (req, res) => {
 //view product from cart
 
 ViewCart: async (req, res) => {
-    const userId = req.params.id;
-  
-    try {
-      const user = await userdatabase.findById(userId);
-  
-      if (!user) {
-        return res.status(404).json({
-          status: "error",
-          message: "User Not Found",
-        });
-      }
-  
-      const cartProducts = await userdatabase.findById(userId).populate("cart.productsId");
-      if (!cartProducts) {
-        return res.status(200).json({
-          status: "Success",
-          message: "User Cart is Empty",
-          data: [],
-        });
-      }
-  
-      res.status(200).json({
-        status: "success",
-        message: "Cart Products Fetched Successfully",  
-        data: cartProducts,
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({
+  const userId = req.params.id;
+
+  try {
+    const user = await userdatabase
+      .findById(userId)
+      .populate("cart.productsId");
+
+    if (!user) {
+      return res.status(404).json({
         status: "error",
-        message: "Internal Server Error",
+        message: "User Not Found",
       });
     }
-  },
+
+    if (!user.cart || user.cart.length === 0) {
+      return res.status(200).json({
+        status: "Success",
+        message: "User Cart is Empty",
+        data: [],
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: "Cart Products Fetched Successfully",   
+      data: user.cart,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+},
+
   
 
 
@@ -306,7 +352,8 @@ ViewCart: async (req, res) => {
 
 removeCartProduct:async(req,res)=>{
     const userId=req.params.id
-    const itemId=req.params.ItemId
+    const itemId=req.params.itemId
+    console.log(itemId)
 
     if(!itemId){
         return res.status(400).json({
@@ -325,6 +372,7 @@ removeCartProduct:async(req,res)=>{
         { _id: userId },
         { $pull: { cart: { productsId:itemId } } }
       );
+      console.log("dd",result)
        
     if (result.modifiedCount > 0) {
         console.log("Item removed successfully");
@@ -350,21 +398,21 @@ AddToWishlist:async(req,res)=>{
         })
 }
 const {productId}=req.body
-const prdts=await Products.findById(productId)
-if(!prdts){
+const produts=await Products.findById(productId)
+if(!produts){
     return res.status(404).json({ 
     status: "Failure", 
     message: "Product not found" });
 }
-const findprdts=await userdatabase.findOne({_id:userId, wishlist:productId})
-if (findprdts) {
+const findproduts=await userdatabase.findOne({_id:userId, wishlist:productId})
+if (findproduts) {
     return res.status(409).json({ 
         status:"conflict",
         message: "Product already on your wishlist " 
     });
   }
-  await userdatabase.updateOne({_id:userId},{$push:{wishlist:prdts}})
-  res.status(201).json({
+  await userdatabase.updateOne({_id:userId},{$push:{wishlist:produts}})
+    return res.status(201).json({
     status: "Success",
     message: "Product Succesfuly added to wishList",
   })
@@ -431,6 +479,7 @@ deletewishlist:async(req,res)=>{
     payment: async (req, res) => {
         const userId = req.params.id;
         // uid = userId  //  for parsing globel vareable
+        console.log(userId);
         const user = await UserSchema.findOne({ _id: userId }).populate("cart.productsId")
     
         if (!user) {         
@@ -468,8 +517,8 @@ deletewishlist:async(req,res)=>{
           payment_method_types: ["card"],
           line_items: lineItems,
           mode: "payment",
-          success_url: `http://localhost:3000/api/users/payment/success`, // success URL
-          cancel_url: "http://localhost:3000/api/users/payment/cancel",   // cancel URL
+          success_url: `http://localhost:3000/payment/success`, // success URL
+          cancel_url: "http://localhost:3000/payment/cancel",   // cancel URL
         });
     
         // console.log("Stripe Session:", session);
@@ -514,7 +563,6 @@ success:async (req, res) => {
       payment_id: `demo ${Date.now()}`,
       total_amount: session.amount_total / 100,
     });
-console.log("orders:",orders)
     if (!orders) {
       return res.json({ message: "error occured while inputing to orderDB" });
     }
