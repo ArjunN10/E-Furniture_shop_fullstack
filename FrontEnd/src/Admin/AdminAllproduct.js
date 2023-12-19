@@ -8,25 +8,31 @@ import { Axios } from '../App';
 // import Adminsidebar from './Adminsidebar';
 
 function AdminAllproduct() {
-  const navigate=useNavigate()
-  const {products,setproducts}=useContext(Mycontext)
+  const navigate = useNavigate();
+  const { products, setproducts } = useContext(Mycontext);
+  // console.log(products)
 
-useEffect(()=>{
-  const FetchProducts=async()=>{
-    try {
-      const response=await Axios.get("/api/admin/products")
-      console.log(response)
-      if(response.status === 200){
-        setproducts(response.data.data)
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const jwtToken = {
+          headers: {
+            Authorization: `${localStorage.getItem("Admin jwt")}`,
+          },
+        };
+        const response = await Axios.get("/api/admin/products",jwtToken);
+        // console.log("resp",response)
+        if (response.status === 200) {
+          setproducts(response.data.data);
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error("Error fetching products"); 
       }
-    } catch (error) {
-      console.log(error)
-      toast.error(error) 
-    }
-  }
-  FetchProducts()
-},[])
+    };
 
+    fetchProducts();
+  }, []);
 
 
   return (
@@ -79,7 +85,7 @@ useEffect(()=>{
             <MDBBtn 
             color='link'
             rounded size='sm'
-            onClick={()=>navigate(`/adminhome/adminedit/${item.id}`)}>
+            onClick={()=>navigate(`/adminhome/adminedit/${item._id}`)}>
               Edit
             </MDBBtn>
           </td>
