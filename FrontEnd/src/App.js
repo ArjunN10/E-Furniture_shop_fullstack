@@ -28,7 +28,7 @@ import AdminUserList from './Admin/AdminUserList';
 // import SuccessPayment from './components/products/Catogery/SuccessPayment';
 import SuccessPayment from './components/products/Catogery/SuccessPayment';
 import axios from 'axios'
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 export const Axios= axios.create({
@@ -47,26 +47,27 @@ const [username,setusername]=useState([])
 const [addcart,setaddcart]=useState([])
 const [loggedIn, setLoggedIn] = useState(false);
 
-// const [wishLit ,setWishlist] = useState([])
-// const [wishStatus, setWishStatus] = useState(false)
-// const userId=localStorage.getItem("UserId")
+const [wishlist ,setWishlist] = useState([])
+const [wishStatus, setWishStatus] = useState(false)
+const userId=localStorage.getItem("UserId")
 
 
 // add Wishlist
 
-// const AddToWishlist=async(){
-//   try {
-//     await Axios.post(`/api/users/${userId}/wishlists`,{productId})
-//       const response = await Axios.get(`api/users/${userId}/wishlists`)
-//       if(response.status === 200){
-//         toast.success("Added to wishlist")
-//         setWishlist(response.data.data)
+const AddToWishlist=async(productId)=>{
+  try {
+    await Axios.post(`/api/users/${userId}/wishlists`,{productId})
+      const response = await Axios.get(`api/users/${userId}/wishlists`)
+      if(response.status === 200){
+        toast.success("Added to wishlist")
+        setWishlist(response.data.data)
 
-//       }
-//   } catch (error) {
+      }
+  } catch (error) {
+    toast.error(error)
     
-//   }
-// }
+  }
+}
 
 
 
@@ -74,7 +75,7 @@ const [loggedIn, setLoggedIn] = useState(false);
 
   return (
     <>
-    <Mycontext.Provider value={{products,setproducts,user,setuser,username,setusername,addcart,setaddcart,loggedIn, setLoggedIn}}>
+    <Mycontext.Provider value={{products,setproducts,user,setuser,username,setusername,addcart,setaddcart,loggedIn, setLoggedIn,AddToWishlist}}>
 
     <Toaster position="top-center" reverseOrder={false}/>
      <Routes>
