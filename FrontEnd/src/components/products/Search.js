@@ -23,13 +23,13 @@ const Search = () => {
     const productsfetch=async()=>{
       try {
         const response=await Axios.get("/api/users/products")
-        console.log(response)
+        // console.log(response)
         if(response.status === 200){
           setproducts(response.data.data)
         }
       } catch (error) {
-        console.log(error)
-        toast.error(error.message || "Failed to fetch products for search")
+        // console.log(error)
+        // toast.error(error.message || "Failed to fetch products for search")
       }
     }
     productsfetch();
