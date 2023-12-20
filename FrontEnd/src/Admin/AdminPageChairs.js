@@ -1,17 +1,51 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { MDBTable, MDBTableHead, MDBTableBody ,MDBBadge,MDBBtn} from 'mdb-react-ui-kit';
 import { Mycontext } from '../context/Context';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+// import { Axios } from '../App';
+import axios from 'axios';
 
 
-function AdminPageChairs() {
-
-        const {products,setproducts}=useContext(Mycontext)
+function AdminPageSofas() {
+    const [products,setproducts]=useState([])
     console.log(products);
-  const bedslist=products.filter((e)=>e.type.toLowerCase() === 'chair')
+  //   const category='sofa'
+  // const sofalist=products.filter((e)=>e.type.toLowerCase() === category)
+  const categoryname="chair"
 
     const navigate=useNavigate()
+   
+
+    useEffect(() => {
+      const productBycategory=async()=>{
+        try {
+          const jwtToken = {
+            headers: {
+              Authorization: `${localStorage.getItem("Admin jwt")}`,
+            },
+          };
+          // console.log(jwtToken)
+          const response = await axios.get(`http://localhost:3003/api/admin/products/category/${categoryname}`,jwtToken)
+          console.log(response)
+          if(response.status === 200){
+            setproducts(response.data.data) 
+          
+             console.log(response.data.data) 
+          }
+        } catch (error) {
+          console.log("error :",error)
+          toast.error(error)
+        }
+      }
+      productBycategory()
+      
+          window.scrollTo(0, 0);
+        }, []);
+
+
+
   return (
     <div>
        <MDBTable responsive className='caption-top'>
@@ -24,24 +58,24 @@ function AdminPageChairs() {
           <th scope='col'>Availability</th>
           <th scope='col'>Type</th>
           <th scope='col'>Price</th>
-          <th scope='col'>Offer Price</th>
+          {/* <th scope='col'>Offer Price</th> */}
         </tr>
       </MDBTableHead>
-      {bedslist.map((item,index)=>
+      {products.map((item,index)=>
      
       <MDBTableBody>
         <tr>
-          <td>{item.id}</td>
+          <td>{item._id}</td>
           <td>
             <div className='d-flex align-items-center'>
               <img
-                src={item.src}
+                src={item.image}
                 alt=''
                 style={{ width: '45px', height: '45px' }}
                 className='rounded-circle'
               />
               <div className='ms-3'>
-                <p className='fw-bold mb-1'>{item.name}</p>
+                <p className='fw-bold mb-1'>{item.title}</p>
           
               </div>
             </div>
@@ -55,9 +89,9 @@ function AdminPageChairs() {
               Available
             </MDBBadge>
           </td>
-          <td>{item.type}</td>
+          <td>{item.category}</td>
           <td>{item.price}</td>
-          <td>{item.price2}</td>
+          {/* <td>{item.price2}</td> */}
           <td>
             <MDBBtn 
             color='link'
@@ -83,5 +117,5 @@ function AdminPageChairs() {
     </div>
   )
 }
-   
-export default AdminPageChairs
+
+export default AdminPageSofas

@@ -1,28 +1,36 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MDBTable, MDBTableHead, MDBTableBody ,MDBBadge,MDBBtn} from 'mdb-react-ui-kit';
 import { Mycontext } from '../context/Context';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Axios } from '../App';
+// import { Axios } from '../App';
+import axios from 'axios';
 
 
 function AdminPageSofas() {
-    const {products,setproducts}=useContext(Mycontext)
+    const [products,setproducts]=useState([])
     console.log(products);
   //   const category='sofa'
   // const sofalist=products.filter((e)=>e.type.toLowerCase() === category)
+  const categoryname="sofa"
 
     const navigate=useNavigate()
-
+   
 
     useEffect(() => {
       const productBycategory=async()=>{
         try {
-          const response = await Axios.get(`/api/users/products/category/sofa`)
+          const jwtToken = {
+            headers: {
+              Authorization: `${localStorage.getItem("Admin jwt")}`,
+            },
+          };
+          // console.log(jwtToken)
+          const response = await axios.get(`http://localhost:3003/api/admin/products/category/${categoryname}`,jwtToken)
           console.log(response)
           if(response.status === 200){
-            setproducts(response.data.data)
+            setproducts(response.data.data) 
           
              console.log(response.data.data) 
           }
@@ -34,13 +42,7 @@ function AdminPageSofas() {
       productBycategory()
       
           window.scrollTo(0, 0);
-        }, [setproducts,Axios]);
-
-
-
-
-
-
+        }, []);
 
 
 
@@ -87,9 +89,9 @@ function AdminPageSofas() {
               Available
             </MDBBadge>
           </td>
-          <td>{item.type}</td>
+          <td>{item.category}</td>
           <td>{item.price}</td>
-          <td>{item.price2}</td>
+          {/* <td>{item.price2}</td> */}
           <td>
             <MDBBtn 
             color='link'

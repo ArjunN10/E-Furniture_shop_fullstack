@@ -14,6 +14,27 @@ function AdminAllproduct() {
   // console.log(products)
 
 
+  const fetchProducts = async () => {
+    try {
+      const jwtToken = {
+        headers: {
+          Authorization: `${localStorage.getItem("Admin jwt")}`,
+        },
+      };
+      const response = await Axios.get("/api/admin/products",jwtToken);
+      // console.log("resp",response)
+      if (response.status === 200) {
+        setproducts(response.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error fetching products"); 
+    }
+  };
+
+
+
+
 
   const handleRemove = async (productId) => {
     try {
@@ -24,10 +45,12 @@ function AdminAllproduct() {
       };
       
       const response = await axios.delete(`http://localhost:3003/api/admin/products`,{...jwtToken,data:{ productId }})
-      // console.log(response)
+      console.log(response)
       if (response.status === 200) {
         setproducts(response.data.data);
         toast.success("Product deleted successfully!");
+        fetchProducts()
+        
       }
     } catch (error) {
       console.error("Error deleting product:", error);
@@ -37,28 +60,11 @@ function AdminAllproduct() {
 
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const jwtToken = {
-          headers: {
-            Authorization: `${localStorage.getItem("Admin jwt")}`,
-          },
-        };
-        const response = await Axios.get("/api/admin/products",jwtToken);
-        // console.log("resp",response)
-        if (response.status === 200) {
-          setproducts(response.data.data);
-        }
-      } catch (error) {
-        console.log(error);
-        toast.error("Error fetching products"); 
-      }
-    };
-
+    
     fetchProducts();
   }, []);
 
- 
+//  console.log("products",products);
 
 
   return (
@@ -66,7 +72,7 @@ function AdminAllproduct() {
     <div >
 <MDBTable responsive className='caption-top '>
 <caption className='ps-5 pt-5'><h4>TOTAL PRODUCTS:
-  {/* {products.length} */}
+  {products.length}
   </h4></caption>
       <MDBTableHead>
         <tr>
@@ -81,7 +87,7 @@ function AdminAllproduct() {
       </MDBTableHead>
      
       <MDBTableBody>
-      {products.map((item,index)=>
+      {products &&products.map((item)=>
         <tr key={item._id}>
           <td>{item._id}</td>
           <td>
