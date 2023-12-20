@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import Footer from "../../Footer";
 import { Axios } from "../../../App";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 function Tables() {
   const navigate = useNavigate();
@@ -23,12 +24,12 @@ function Tables() {
   // const FilterProduct = products.filter(
   //   (e) => e.type.toLowerCase() === "table"
   // );
-
+const categoryname="Table"
 
   useEffect(() => {
     const productBycategory=async()=>{
       try {
-        const response= await Axios.get(`/api/users/products/category/table`)
+        const response= await axios.get(`http://localhost:3003/api/users//products/category/${categoryname}`) 
         // console.log(response)
         if(response.status === 200){
           setproducts(response.data.data)

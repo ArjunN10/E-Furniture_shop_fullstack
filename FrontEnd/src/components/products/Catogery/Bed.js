@@ -16,6 +16,7 @@ import { useNavigate} from 'react-router-dom';
 import Footer from '../../Footer';
 import toast from 'react-hot-toast';
 import { Axios } from '../../../App';
+import axios from 'axios';
 
 function Bed() {
   const navigate = useNavigate();
@@ -23,12 +24,12 @@ function Bed() {
   // const FilterProduct = products.filter((e) => e.type.toLowerCase() === 'bed');
 
   // const {categoryname} =useParams()
-
+const categoryname="Bed"
 
   useEffect(() => {
 const productBycategory=async()=>{
   try {
-    const response=await Axios.get(`/api/users/products/category/bed`) 
+    const response=await axios.get(`http://localhost:3003/api/users//products/category/${categoryname}`) 
     console.log(response)
     if(response.status === 200){
       setproducts(response.data.data)

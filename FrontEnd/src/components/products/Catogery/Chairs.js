@@ -16,17 +16,18 @@ import { useNavigate } from 'react-router-dom';
 import Footer from '../../Footer';
 import { Axios } from '../../../App';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 function Chairs() {
   const navigate = useNavigate();
   const { products,setproducts } = useContext(Mycontext);
   // const FilterProduct = products.filter((e) => e.type.toLowerCase() === 'chair');
-  const categoryname="chair"
+  const categoryname="Chair"
 
   useEffect(() => {
     const productBycategory=async()=>{
       try {
-        const response=await Axios.get(`/api/users/products/category/${categoryname}`)
+        const response=await axios.get(`http://localhost:3003/api/users//products/category/${categoryname}`)
         if(response.status === 200){
           setproducts(response.data.data)
         }

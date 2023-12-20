@@ -16,22 +16,20 @@ import { useNavigate } from 'react-router-dom';
 import Footer from '../../Footer';
 import { Axios } from '../../../App';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 function Sofa() {
   const navigate = useNavigate();
   const { products,setproducts  } = useContext(Mycontext);
-  // const FilterProduct = products.filter((e) => e.type.toLowerCase() === 'sofa');
-const categoryname="sofa"
+const categoryname="Sofa"
 
   useEffect(() => {
 const productBycategory=async()=>{
   try {
-    const response = await Axios.get(`/api/users/products/category/${categoryname}`)
-    console.log(response)
+    const response = await axios.get(`http://localhost:3003/api/users//products/category/${categoryname}`)
     if(response.status === 200){
       setproducts(response.data.data)
-    
-       console.log(response.data.data) 
+     
     }
   } catch (error) {
     console.log("error :",error)
@@ -41,7 +39,7 @@ const productBycategory=async()=>{
 productBycategory()
 
     window.scrollTo(0, 0);
-  }, [setproducts,Axios]);
+  }, [setproducts]);
 
   return (
     <>
