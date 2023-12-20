@@ -15,6 +15,9 @@ import {
   MDBDropdownItem,
   MDBCollapse,
 } from "mdb-react-ui-kit";
+import { FaUser } from "react-icons/fa";
+import { GoDotFill } from "react-icons/go";
+
 import { useNavigate } from "react-router-dom";
 import { Mycontext } from "../context/Context";
 import Search from "./products/Search";
@@ -173,7 +176,7 @@ function Nav() {
         <div>
           <Search />
         </div>
-        {loggedIn == false ? (
+        {!loggedIn ? (
           <div className="d-flex">
             <MDBBtn
               outline
@@ -195,11 +198,12 @@ function Nav() {
               onClick={handleLogout}
               className="me-2"
               type="button"
+              style={{height:60}}
             >
               Logout
             </MDBBtn>
 
-            <MDBNavbarBrand className="me-2" href="#">
+            <MDBNavbarBrand className="me-2 " href="#">
               <MDBBtn className="btn btn-white" onClick={() => navcart()}>
                 <img
                   src="https://img.icons8.com/?size=2x&id=TdZUZUq3XNh6&format=gif"
@@ -211,14 +215,27 @@ function Nav() {
             </MDBNavbarBrand>
           </div>
         )}
-        <MDBBtn className="btn btn-white ">
-          <img
-            src="https://img.icons8.com/?size=2x&id=85750&format=png"
-            alt="profile"
-            className="img-fluid"
-          />
+        
+        <MDBDropdown className='btn-group'  >
+      <MDBDropdownToggle split style={{ backgroundColor: 'white',padding:0 }}>
+      <MDBBtn className="btn btn-white ">
+         <FaUser style={{fontSize:"30px "}}/>
+         <br/>
           {username}
         </MDBBtn>
+      </MDBDropdownToggle>
+      <MDBDropdownMenu>
+        <MDBDropdownItem onClick={()=>navigate('/wishlist')} className=" ms-5"> 
+        <GoDotFill/>
+        Wishlist
+        </MDBDropdownItem>
+        <MDBDropdownItem className=" ms-5">
+        <GoDotFill/>
+          My Orders
+          </MDBDropdownItem>
+        {/* <MDBDropdownItem link>Something else here</MDBDropdownItem>  */}
+      </MDBDropdownMenu>
+    </MDBDropdown>
       </MDBContainer>
     </MDBNavbar>
     </>

@@ -29,6 +29,7 @@ import AdminUserList from './Admin/AdminUserList';
 import SuccessPayment from './components/products/Catogery/SuccessPayment';
 import axios from 'axios'
 import toast, { Toaster } from 'react-hot-toast';
+import Wishlist from './components/products/Catogery/Whishlist';
 
 
 export const Axios= axios.create({
@@ -92,6 +93,7 @@ const AddToWishlist=async(productId)=>{
       <Route path='/allproducts' element={<Allproducts/>}/>
       <Route path='/addcart' element={<Addcart/>}/>
       <Route path='/bill' element={<Paymentpage/>}/>
+      <Route path='/wishlist' element={<Wishlist/>}/>
       <Route path="/payment/success" element={<SuccessPayment/>}/>
       <Route path='/*' element={<Externalpage/>}/>
 
