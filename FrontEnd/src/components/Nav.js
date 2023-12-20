@@ -16,7 +16,8 @@ import {
   MDBCollapse,
 } from "mdb-react-ui-kit";
 import { FaUser } from "react-icons/fa";
-import { GoDotFill } from "react-icons/go";
+import { FaHeartCircleExclamation } from "react-icons/fa6"
+import { FaRightToBracket } from "react-icons/fa6";
 
 import { useNavigate } from "react-router-dom";
 import { Mycontext } from "../context/Context";
@@ -202,7 +203,6 @@ function Nav() {
             >
               Logout
             </MDBBtn>
-
             <MDBNavbarBrand className="me-2 " href="#">
               <MDBBtn className="btn btn-white" onClick={() => navcart()}>
                 <img
@@ -215,9 +215,8 @@ function Nav() {
             </MDBNavbarBrand>
           </div>
         )}
-        
         <MDBDropdown className='btn-group'  >
-      <MDBDropdownToggle split style={{ backgroundColor: 'white',padding:0 }}>
+      <MDBDropdownToggle split style={{ backgroundColor: 'white',padding:0  }}>
       <MDBBtn className="btn btn-white ">
          <FaUser style={{fontSize:"30px "}}/>
          <br/>
@@ -225,15 +224,18 @@ function Nav() {
         </MDBBtn>
       </MDBDropdownToggle>
       <MDBDropdownMenu>
-        <MDBDropdownItem onClick={()=>navigate('/wishlist')} className=" ms-5"> 
-        <GoDotFill/>
-        Wishlist
-        </MDBDropdownItem>
-        <MDBDropdownItem className=" ms-5">
-        <GoDotFill/>
-          My Orders
+      <MDBDropdownItem className=" ms-5">
+      <FaRightToBracket className="me-1"/>
+      {username}
           </MDBDropdownItem>
-        {/* <MDBDropdownItem link>Something else here</MDBDropdownItem>  */}
+        <MDBDropdownItem onClick={()=>navigate('/wishlist')} className=" ms-5"> 
+        <FaHeartCircleExclamation />
+                Wishlist
+        </MDBDropdownItem>
+        {/* <MDBDropdownItem className=" ms-5">
+        <GoDotFill />
+                  My Orders
+          </MDBDropdownItem> */}
       </MDBDropdownMenu>
     </MDBDropdown>
       </MDBContainer>
