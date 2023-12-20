@@ -12,24 +12,6 @@ function AdminAdd() {
 const {products,setproducts}=useContext(Mycontext)
 const navigate=useNavigate()
 
-// const handleAdding=(item)=>{
-// item.preventDefault()
-// const productname=item.target.name.value
-// const productUrl=item.target.url.value
-// const producttype=item.target.type.value
-// const productPrice=item.target.price.value
-// const productOffer=item.target.offer.value
-// const producDescription=item.target.description.value
-
-// item.target.reset()
-// if(producttype){
-// setproducts([...products,{name:productname,src:productUrl,price:productPrice,price2:productOffer,qty:1,type: producttype,description:producDescription,id:products.length+1}])
-// }else{
-//   alert("select category")
-// }
-// }
-
-
 
 const [title, settitle] = useState("");
 const [image, setImage] = useState(null);
@@ -37,11 +19,6 @@ const [category, setCategory] = useState("");
 const [price, setPrice] = useState("");
 const [description, setDescription] = useState("");
 
-console.log(title)
-console.log(image)
-console.log(category)
-console.log(price)
-console.log(description)
 
 const handleImageChanges = (item) => {
   const selectedImage = item.target.files[0];
@@ -69,7 +46,7 @@ const handleSubmit = async (item) => {
   formData.append("price", price);
   formData.append("description", description);
 
-  console.log(formData); 
+  // console.log(formData); 
 
   try {
     const jwtToken = {
