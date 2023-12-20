@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   MDBDropdown,
@@ -10,19 +10,40 @@ import {
   MDBIcon,
 } from "mdb-react-ui-kit";
 import { useNavigate } from "react-router-dom";
-import { Mycontext } from "../../context/Context";
+import { Axios } from "../../App";
+import toast from "react-hot-toast";
 
 const Search = () => {
-  const { products } = useContext(Mycontext);
+  const [products,setproducts]=useState([])
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const productsfetch=async()=>{
+      try {
+        const response=await Axios.get("/api/users/products")
+        console.log(response)
+        if(response.status === 200){
+          setproducts(response.data.data)
+        }
+      } catch (error) {
+        console.log(error)
+        toast.error(error.message || "Failed to fetch products for search")
+      }
+    }
+    productsfetch();
+    
+    window.scrollTo(0, 0);
+      }, [setSearchQuery]);
+    
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
-
+  
   const filteredProducts = products.filter((item) =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase())
+  item.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -45,11 +66,11 @@ const Search = () => {
         <MDBDropdownMenu end className="overflow-hidden">
           {filteredProducts.map((item) => (
             <MDBDropdownItem
-              key={item.id}
-              onClick={() => navigate(`/productview/${item._id}`)}
+            key={item._id}
+            onClick={() => navigate(`/productview/${item._id}`)}
             >
-              <img src={item.src} className="w-25" alt={item.name} />{" "}
-              {item.name}
+              <img src={item.image} className="w-25" alt={item.title} />{" "}
+              {item.title}
             </MDBDropdownItem>
           )).splice(0,6)}
         </MDBDropdownMenu>
