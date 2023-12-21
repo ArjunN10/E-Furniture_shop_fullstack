@@ -157,7 +157,9 @@ function Login() {
                   <MDBBtn className="w-100 mb-4" size="md">
                     sign in
                   </MDBBtn>
+                <h6 className="text-center mb-2">Or</h6>
                   <GoogleButton
+                  className="w-100 mb-3"
                type="light" // can be light or dark
                onClick={handleGoogleLogin}
                   />
