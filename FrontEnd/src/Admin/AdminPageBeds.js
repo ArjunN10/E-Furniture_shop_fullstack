@@ -48,6 +48,7 @@ function AdminPageSofas() {
           window.scrollTo(0, 0);
         }, []);
 
+        
         const handleRemove = async (productId) => {
           try {
             const jwtToken = {
