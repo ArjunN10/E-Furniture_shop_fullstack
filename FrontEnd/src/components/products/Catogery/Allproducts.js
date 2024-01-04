@@ -1,14 +1,15 @@
 import React, { useContext, useEffect } from 'react';
-import { MDBCard, MDBCardBody, MDBCardTitle, MDBCardText, MDBCardFooter, MDBCardImage, MDBBtn, MDBRipple } from 'mdb-react-ui-kit';
+import { MDBCard, MDBCardBody, MDBCardTitle, MDBCardText, MDBCardFooter, MDBCardImage, MDBBtn, MDBRipple, MDBIcon } from 'mdb-react-ui-kit';
 import { Mycontext } from '../../../context/Context';
 import { useNavigate } from 'react-router-dom';
 import Nav from '../../Nav';
 import Footer from '../../Footer';
 import { Axios } from '../../../App';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 function Allproducts() {
-  const { products,setproducts } = useContext(Mycontext);
+  const { products,setproducts,AddToWishlist } = useContext(Mycontext);
   const navigate = useNavigate();
   const IsUser=localStorage.getItem("UserId")
 // console.log(IsUser)
@@ -16,7 +17,7 @@ function Allproducts() {
   useEffect(() => {
 const productsfetch=async()=>{
   try {
-    const response=await Axios.get("/api/users/products")
+    const response=await axios.get("http://localhost:3003/api/users/products")
     if(response.status === 200){
       setproducts(response.data.data)
       // console.log("products:",response.data.data)
@@ -29,7 +30,7 @@ const productsfetch=async()=>{
 productsfetch();
 
     window.scrollTo(0, 0);
-  }, [Axios]);
+  }, []);
 
 
   const handleViewProduct = (productId) => {
@@ -51,6 +52,10 @@ productsfetch();
           products.map((items) => (
             <div key={items._id} className='col mb-4'>
               <MDBCard className='h-100'>
+              <MDBIcon style={{marginLeft:10,marginTop:5,fontSize:25,}} far icon="heart"        //Wishlist icon
+                  onClick={() => 
+                    IsUser ? AddToWishlist(items._id): toast.error("Pleas login")
+                  } />
                 <MDBRipple rippleColor='light' rippleTag='div' className='bg-image hover-overlay'>
                   <MDBCardImage src={items.image} fluid alt='Photo' />
                 </MDBRipple>
