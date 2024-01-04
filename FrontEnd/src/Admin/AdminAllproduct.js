@@ -35,7 +35,6 @@ function AdminAllproduct() {
 
 
 
-
   const handleRemove = async (productId) => {
     try {
       const jwtToken = {

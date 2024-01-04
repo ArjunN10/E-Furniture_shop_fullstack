@@ -26,6 +26,7 @@ const userid=localStorage.getItem("UserId")
     navigate("/");
   };
 
+  
 const FetchCartproducts=async()=>{
   try {
     const response=await Axios.get(`/api/users/${userid}/cart`)
@@ -81,7 +82,6 @@ const handleRemoveItem=async(itemId)=>{
 const handleCheckout=async()=>{
   try {
     const response=await Axios.post(`/api/users/${userid}/payment`)
-    console.log("payy",response)
     if(response.status === 200){
      const url=response.data.url
      const conformation=window.confirm("Payment session created. Redirecting to the payment gateway. Continue?")
@@ -108,7 +108,6 @@ const calculateTotal = (cartItems) => {
                 >
                   Cart products
                 </MDBTypography>
-                {/* {console.log(addcart)} */}
                 { addcart.map((item) => (
                   <div className="d-flex align-items-center mb-4" key={item.productsId}>
                     {/* {console.log(item.productsId)} */}

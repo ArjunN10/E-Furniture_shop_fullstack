@@ -74,7 +74,7 @@ UseById:async(req,res)=>{
     }
     res.status(200).json({
         status:"success",
-        message:"User successfully Found",
+        message:"User successfully Found",  
         data:{user}
     })
 },
@@ -83,26 +83,26 @@ UseById:async(req,res)=>{
 //Add/Create a  products
 
 addproduct:async(req,res)=>{
-    console.log("hhhhh");
-    const {value,error}=joiProductSchema.validate(req.body)
+    const {value,error}=joiProductSchema.validate(req.body) 
     if (error){
         res.status(404).json({
-           error:error.details[0].message
+           error:error.details[0].message 
         })
-    }
-    const {title,description,category,price,image}=value;
-    await products.create({
-        title,
-        description,
-        category,
-        price,
-        image
-
-    })
+    }  
+   
+    const {title,description,category,price,image}=value;    
+   const Products=new products({
+    title:title,
+    description:description,
+    category:category, 
+    price:price,
+    image:image
+   })
+    await Products.save()
     res.status(201).json({
         status:"success",
         message:"product created successfully",
-        data:products
+        data:Products
     })
 },
 
@@ -111,21 +111,21 @@ addproduct:async(req,res)=>{
 //View all products
 
 allproducts:async(req,res)=>{
-const productsList= await products.find();
-console.log( productsList)
-if(!productsList){
-    return res.status(404).json({
-        status:"error",
-        message:"Products not found"
-    })
-}
-res.status(200).json({
-    status:"success",
-    message:"All product details fetched successfully",
-    data:productsList
-})
-console.log(productsList)  
-},
+    const productList=await products.find()
+        if(productList.length === 0){   
+            res.status(404).json({
+                status:"error",
+                message:"No products Found"
+            })
+        }else{
+    
+            res.status(200).json({
+                status:"success",
+                message:"Successfully fetched product Data",
+                data:productList
+            })
+        }
+    },
 
 
 //View product By Id
@@ -149,13 +149,38 @@ const product=await products.findById(productid)
 },
 
 
+
+// view product By category
+
+productByCategory:async(req,res)=>{
+    const productCategory=req.params.categoryname   
+    try {  
+           const Products = await products.find({category:productCategory});      
+          if (!products.length) {
+            return res.status(404).json({   
+              status: 'error',
+              message: 'No products found in the specified category',
+            });
+        }
+        res.status(200).json({
+            status: 'success',
+            message: 'Product Category Fetched ✅',
+            data: Products,
+        });
+    } catch (error) {
+        console.error('Error fetching products by category:', error);
+        res.status(500).json({
+          status: 'error',
+          message: 'Internal Server Error',
+        })
+    }
+    },
+
 //Delete product
 
 deleteProduct:async(req,res)=>{
     const {productId}=req.body
-
-
-    if(!productId || !mongoose.Types.ObjectId.isValid(productId)){
+    if(!productId ){ 
         return res.status(404).json({
             status:"error",
             message:"Invalid product Id provided"
@@ -178,19 +203,17 @@ deleteProduct:async(req,res)=>{
 //Update product
 
 UpdateProduct:async(req,res)=>{
-const {value,error}= joiProductSchema.validate(req.body)
-
+const {value,error}= joiProductSchema.validate(req.body)     
 if(error){
-    return res.status(404).json({   
+    return res.status(404).json({    
         status:"error",
         message:error.details[0].message
     })
 }     
 const {id,title,image,price,category,description}=value;
 
-const product=await products.find()
+const product=await products.find()  
 if(!product){
-
     return res.status(404).json({
         status:"error",
         message:"Product not found in database"
@@ -216,10 +239,9 @@ res.status(200).json({
 //order Details
 
 AdminOrderDtails:async(req,res)=>{
-
     const products=await OrderSchema.find()
     if(products.length === 0){
-        return res.status(404).json({
+        return res.status(404).json({ 
             status:"error",
             message:"No order Details"
         })
@@ -235,7 +257,6 @@ AdminOrderDtails:async(req,res)=>{
 //Total Revenue Generated
 
 status:async(req,res)=>{
-
     const totalRevenue = await OrderSchema.aggregate([ 
         {
           $group: {
@@ -274,7 +295,6 @@ status:async(req,res)=>{
 //     })
 
 // }
-
 
 
 }
