@@ -190,28 +190,12 @@ try {
     });
 } catch (error) {
     console.error('Error fetching products by category:', error);
-    res.status(500).json({
+    res.status(500).json({  
       status: 'error',
       message: 'Internal Server Error',
     })
 }
-},
-// const Prdct=await Products.find({category:productCategory})
-// // console.log(Prdct)
-// if(!Prdct){
-//     return res.status(404).json({
-//         status:"error",
-//         message:"Category Not Found"
-//     })      
-// }  
-// res.status(200).json({
-//     status:"success",
-//     message:"Product Category Fetched✅",   
-//     data:Prdct   
-    
-// })   
-// console.log(data)
-
+}, 
 
   
 // Add to Cart
@@ -219,7 +203,6 @@ try {
     addToCart:async (req, res) => {  
         const userId = req.params.id;  
 
-        // console.log(typeof(userId))
         const user = await UserSchema.findById(userId);
         if (!user) {
         return res.status(404).json({
@@ -285,7 +268,6 @@ updateCartItemQuantity: async (req, res) => {
       return res.status(404).json({ message: 'User not found' }) 
     }
     const cartItem = user.cart.id(id)
-    console.log("ggg",cartItem );
     if (!cartItem) { 
       return res.status(404).json({ message: 'Cart item not found' }) 
     }
@@ -301,7 +283,6 @@ updateCartItemQuantity: async (req, res) => {
     });
   },
   
-
 
 
 
@@ -353,7 +334,6 @@ ViewCart: async (req, res) => {
 removeCartProduct:async(req,res)=>{
     const userId=req.params.id
     const itemId=req.params.itemId
-    console.log(itemId)
 
     if(!itemId){
         return res.status(400).json({
@@ -372,7 +352,7 @@ removeCartProduct:async(req,res)=>{
         { _id: userId },
         { $pull: { cart: { productsId:itemId } } }
       );
-      console.log("dd",result)
+      // console.log("dd",result)
        
     if (result.modifiedCount > 0) {
         console.log("Item removed successfully");
@@ -578,10 +558,7 @@ success:async (req, res) => {
       { new: true }
     );
 
-    console.log(userUpdate);
-
-    // console.log ("uSer Update",userUpdate)
-
+    // console.log(userUpdate);
     if (userUpdate) {
       res.status(200).json({
         status: "Success",
