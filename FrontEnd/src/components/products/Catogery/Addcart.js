@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 
 function Addcart() {
   const [addcart, setaddcart ] = useState([])
+  console.log("addcc",addcart)
   const navigate = useNavigate();
 // const {id}=useParams()
 const userid=localStorage.getItem("UserId")
@@ -108,46 +109,53 @@ const calculateTotal = (cartItems) => {
                 >
                   Cart products
                 </MDBTypography>
-                { addcart.map((item) => (
-                  <div className="d-flex align-items-center mb-4" key={item.productsId}>
-                    {/* {console.log(item.productsId)} */}
-                    <div className="flex-shrink-0">
-                      <MDBCardImage
-                        src={item.productsId.image}
-                        fluid
-                        style={{ maxWidth: "150px" }}
-                        alt={item.productsId.title}
+                {addcart.map((item) => (
+                  <div className="d-flex align-items-center mb-4" key={item.productsId?._id || item._id}>
+                    {item.productsId && (
+                      <div className="flex-shrink-0">
+                        <MDBCardImage
+                          src={item.productsId.image}
+                          fluid
+                          style={{ maxWidth: "150px" }}
+                          alt={item.productsId.title}
                         />
-                    </div>
+                      </div>
+                    )}
 
                     <div className="flex-grow-1 ms-3">
-                      <a
-                        href="#!"
-                        className="float-end text-black"
-                        onClick={() =>  handleRemoveItem(item.productsId._id)}
-                      >
-                        <MDBIcon fas icon="times" />
-                      </a>
-                      <MDBTypography tag="h5" className="text-primary">
-                        {item.productsId.title}
-                      </MDBTypography>
+                      {item.productsId && (
+                        <a
+                          href="#!"
+                          className="float-end text-black"
+                          onClick={() => handleRemoveItem(item.productsId._id)}
+                        >
+                          <MDBIcon fas icon="times" />
+                        </a>
+                      )}
+                      {item.productsId && (
+                        <MDBTypography tag="h5" className="text-primary">
+                          {item.productsId.title}
+                        </MDBTypography>
+                      )}
                       <div className="d-flex align-items-center">
-                        <p className="fw-bold mb-0 me-4">Price: ${item.productsId.price}</p>
+                        {item.productsId && (
+                          <p className="fw-bold mb-0 me-4">Price: ${item.productsId.price}</p>
+                        )}
                         <MDBBtn
-                                style={{ border: "1px" }}
-                                className="minus mx-3 "
-                                onClick={() => handleQuantity(item._id, -1)}
-                                >
-                                <MDBIcon fas icon="minus" />
-                              </MDBBtn>
-                             <span className="me-4">{item.quantity}</span>
-                              <MDBBtn
-                                className="plus"
-                                style={{ border: "1px" }}
-                               onClick={() => handleQuantity(item._id, 1)}
-                              >
-                            <MDBIcon fas icon="plus" />
-                          </MDBBtn>
+                          style={{ border: "1px" }}
+                          className="minus mx-3 "
+                          onClick={() => handleQuantity(item._id, -1)}
+                        >
+                          <MDBIcon fas icon="minus" />
+                        </MDBBtn>
+                        <span className="me-4">{item.quantity}</span>
+                        <MDBBtn
+                          className="plus"
+                          style={{ border: "1px" }}
+                          onClick={() => handleQuantity(item._id, 1)}
+                        >
+                          <MDBIcon fas icon="plus" />
+                        </MDBBtn>
                       </div>
                     </div>
                   </div>
@@ -159,16 +167,11 @@ const calculateTotal = (cartItems) => {
           <MDBCol lg="5">
             <form className="mb-4">
               <MDBTypography tag="h5" className="fw-bold mb-4">
-              <p className="text-center fw-bold text-uppercase">
+                <p className="text-center fw-bold text-uppercase">
                   GRAND TOTAL: ${calculateTotal(addcart)}
                 </p>
               </MDBTypography>
-              <MDBBtn
-                onClick={() => handleCheckout()}
-                className="mb-3"
-                block
-                size="lg"
-              >
+              <MDBBtn onClick={() => handleCheckout()} className="mb-3" block size="lg">
                 Buy now
               </MDBBtn>
               <a href="#!" onClick={handleBackToShopping}>
@@ -185,5 +188,6 @@ const calculateTotal = (cartItems) => {
     </section>
   );
 }
+
 
 export default Addcart;

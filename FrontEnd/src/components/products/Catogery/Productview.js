@@ -14,6 +14,7 @@ import Nav from "../../Nav";
 import Footer from "../../Footer";
 import { Axios } from "../../../App";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 function Productview() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ const [products,setproducts]=useState([])
   useEffect(() => {
     const FetchById=async()=>{
       try {
-        const response=await Axios.get(`/api/users/products/${id}`)
+        const response=await axios.get(`http://localhost:3003/api/users/products/${id}`)
         if(response.status === 200){
           setproducts(response.data.data || [])
         }

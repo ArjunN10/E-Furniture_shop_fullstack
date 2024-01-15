@@ -98,7 +98,7 @@ res.status(200).json({
 
 
 googleAuthLogin:async(req,res)=>{
-  const {email, displayName}=req.body
+  const {email, displayName}=req.body 
   console.log(req.body)
 try {
   const existUser=await userdatabase.findOne({email:email})

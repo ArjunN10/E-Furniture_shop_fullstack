@@ -21,13 +21,11 @@ import axios from "axios";
 
 function Login() {
   const navigate = useNavigate();
-
   const login = async(e) => {
     e.preventDefault();
     const eml = e.target.email.value.trim();
     const password = e.target.pwd.value;
     const Adminemail=process.env.REACT_APP_ADMIN_EMAIL
-    // console.log(Adminemail)
 
     if(eml === "" || password === ""){
       toast.error("Inuput Field is Empty")
@@ -41,7 +39,6 @@ function Login() {
     try {  
       const payload= {email:eml,password};
       const response=await Axios.post(url,payload)
-      // console.log(response)
 
       if(response.status === 200){
         eml === Adminemail && localStorage.setItem("role","admin")
@@ -51,12 +48,6 @@ function Login() {
         localStorage.setItem("UserEmail",response.data.data.email)
         localStorage.setItem("UserName",response.data.data.Username)
 
-        // console.log(Adminemail)
-        // console.log(response.data.data.id)
-        // console.log(response.data.data.Token)
-        // console.log(response.data.data.email)
-        // console.log(response.data.data.Username)
-        // console.log(response.data.data)
 
         if(eml === Adminemail){
           navigate("/adminhome/")
@@ -68,32 +59,30 @@ function Login() {
             localStorage.removeItem("UserEmail")
             localStorage.removeItem("UserName")
             localStorage.removeItem("Admin jwt")
-
           },3600000)
           navigate("/")
           toast.success("Login Successfull")
         }  
       }else{
         toast.error("Login Failed:",response.error)
-       
       }
     }catch(error){
       console.log("err:",error)
       toast.error("Invalid EMAIL or PASSWORD")
     }
   };
-
+  
   const handleGoogleLogin=async()=>{
     try {
         const data = await signInWithPopup(auth, provider);
   const credential = GoogleAuthProvider.credentialFromResult(data);
   const user = data.user;
-  // console.log("credential:",credential);
-  // console.log("user",user);
+
+  console.log("credential:",credential);
+  console.log("user",user);
 
 
   try {
-
     const response=await axios.post("http://localhost:3003/api/users/googleauthlogin",user)
     if(response.status==201||203){
       toast.success("login successfull")
@@ -103,8 +92,6 @@ function Login() {
       localStorage.setItem("UserId",response.data.userid._id)
       navigate("/")
     }
-
-    
   } catch (error) {
    toast.error(error)
   }
@@ -129,7 +116,6 @@ function Login() {
               id="radius-shape-2"
               className="position-absolute shadow-5-strong"
             ></div>
-
             <MDBCard
               className="my-5 bg-glass"
               style={{
