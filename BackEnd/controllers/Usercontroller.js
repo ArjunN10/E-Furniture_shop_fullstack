@@ -527,7 +527,7 @@ deletewishlist:async(req,res)=>{
 
 success:async (req, res) => {
     const { id, user, session } = sValue
-    // console.log( "svalues:-",sValue)
+    // console.log( "svalues:-",sValue,"huhuh")
     const userId = user._id;
     const cartItems = user.cart;
     // console.log(userId)  
